@@ -6,10 +6,8 @@ Before you begin working on the project, it's important to set up your Git confi
 
 Open your terminal or command prompt.
 
-Run the following command to set your Git user name:
+Run the following command within project terminal to set your Git user name:
 
-bash
-Copy code
 git config --global user.name "Your Name"
 Replace "Your Name" with your actual name. This will configure Git to use your name for all commits made from this computer.
 
@@ -17,16 +15,12 @@ Verify your Git configuration:
 
 To check if your user name has been set correctly, run:
 
-bash
-Copy code
 git config --global user.name
 This command should return the name you entered.
 
 Additional Git Configurations
 You may also want to set your email address:
 
-bash
-Copy code
 git config --global user.email "you@example.com"
 Replace "you@example.com" with your actual email address.
 
