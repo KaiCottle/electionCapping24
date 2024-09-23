@@ -1,12 +1,12 @@
-drop table if exists Committees;
-drop table if exists Roles;
-drop table if exists CommitteeAssignments;
 drop table if exists ExportedFaculty;
 drop table if exists AdminExports;
-drop table if exists Exports;
-drop table if exists Admins;
-drop table if exists Schools;
+drop table if exists CommitteeAssignments;
+drop table if exists Committees;
+drop table if exists Roles;
 drop table if exists Faculty;
+drop table if exists Admins;
+drop table if exists Exports;
+drop table if exists Schools;
 drop table if exists People;
 
 -- Creating tables
