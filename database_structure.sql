@@ -1,8 +1,5 @@
-drop table if exists ExportedFaculty;
-drop table if exists AdminExports;
 drop table if exists CommitteeAssignments;
 drop table if exists Committees;
-drop table if exists Roles;
 drop table if exists Faculty;
 drop table if exists Admins;
 drop table if exists Exports;
@@ -47,7 +44,6 @@ create table Faculty (
 	PrefName     text null,
 	URL          text not null,
 	TheStatement text not null,
-	PriorServ    text null,
 	LastUpdated  timestamp not null,
 primary key (FID)
 );
@@ -58,30 +54,8 @@ create table Committees (
 primary key (CID)
 );
 
-create table Roles (
-	RID   serial not null,
-	Rname text not null,
-primary key (RID)
-);
-
-create table AdminExports (
-	AID        int not null references Admins(AID),
-	EID        int not null references Exports(EID),
-	ExportDate timestamp not null,
-primary key (AID, EID)
-);
-
-create table ExportedFaculty (
-	FID int not null references Faculty(FID),
-	EID int not null references Exports(EID),
-primary key (FID, EID)
-);
-
 create table CommitteeAssignments (
 	FID       int not null references Faculty(FID),
 	CID       int not null references Committees(CID),
-	StartDate date not null,
-	EndDate   date null,
-	RoleID    int not null references Roles(RID),
 primary key (FID, CID)
 );
