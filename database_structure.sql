@@ -2,7 +2,6 @@ drop table if exists CommitteeAssignments;
 drop table if exists Committees;
 drop table if exists Faculty;
 drop table if exists Admins;
-drop table if exists Exports;
 drop table if exists Schools;
 drop table if exists People;
 
@@ -21,13 +20,6 @@ create table Admins (
 	ThePassword text not null,
 	Godmode     bool not null,
 primary key (AID)
-);
-
-create table Exports (
-	EID       serial not null,
-	Ename     text not null,
-	Completed bool not null,
-primary key (EID)
 );
 
 create table Schools (
