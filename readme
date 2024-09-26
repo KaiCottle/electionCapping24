@@ -1,0 +1,28 @@
+Project Setup Guide
+Welcome to the project! Follow these steps to set up your environment and get started.
+
+Git Configuration
+Before you begin working on the project, it's important to set up your Git configuration to ensure that your commits are properly attributed. Follow the steps below to set your Git user name:
+
+Open your terminal or command prompt.
+
+Run the following command within project terminal to set your Git user name:
+
+git config --global user.name "Your Name"
+Replace "Your Name" with your actual name. This will configure Git to use your name for all commits made from this computer.
+
+Verify your Git configuration:
+
+To check if your user name has been set correctly, run:
+
+git config --global user.name
+This command should return the name you entered.
+
+Additional Git Configurations
+You may also want to set your email address:
+
+git config --global user.email "you@example.com"
+Replace "you@example.com" with your actual email address.
+
+Conclusion
+That's it! You've successfully set up your Git configuration. You're now ready to start contributing to the project.
