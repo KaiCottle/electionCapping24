@@ -1,0 +1,113 @@
+
+  
+
+# **Connecting to PostgreSQL Database**
+
+  
+
+This guide will walk you through connecting to the PostgreSQL database set up on the VM.
+
+  
+
+## **Prerequisites**
+
+  
+
+- Access to the VM via SSH.
+
+- PostgreSQL installed and running on the VM.
+
+- PostgreSQL user credentials (username, password).
+
+- IP address of the VM.
+
+- Run `npm install pg dotenv` in the root terminal after cloning
+
+  
+
+----------
+
+  
+
+## **Step 1: SSH into the VM**
+
+  
+
+You can access the VM via SSH. Use the following command:
+
+  
+
+`ssh developer@10.11.29.103`
+
+  
+
+Or, if you need to SSH as the root user:
+
+  
+  
+
+`ssh root@10.11.29.103`
+
+  
+
+Enter the password when prompted:
+
+  
+
+`Password: MaristDev2024!`
+
+  
+
+----------
+
+  
+
+## **Step 2: Connect to PostgreSQL on the VM**
+
+  
+
+Once you’re logged into the VM, you can connect to the PostgreSQL instance using the `psql` command.
+
+  
+
+1. Switch to the PostgreSQL user:
+
+`sudo -i -u postgres`
+
+2. Access the PostgreSQL command-line interface (CLI) with the following command:
+
+`psql`
+
+  
+
+### Example Queries:
+
+  
+
+-  **List all databases:**
+
+`\l`
+
+-  **Connect to a specific database:**
+
+  
+
+`\c faculty_elections`
+
+-  **List all tables in the current database:**
+
+  
+
+`\dt`
+
+-  **Run a SQL query:**
+
+`SELECT * FROM your_table_name;`
+
+-  **Exit the `psql` CLI:**
+
+`\q`
+
+  
+
+----------
