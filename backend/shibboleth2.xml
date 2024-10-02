@@ -10,6 +10,6 @@
         <Handler type="Session" Location="/Session" showAttributeValues="true"/>
     </Sessions>
     <MetadataProvider type="XML" uri="file:///C:/electionCapping24/backend/idp_metadata.xml"/>
-    <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+    <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="C:/electionCapping24/backend/attribute-map.xml"/>
     <CredentialResolver type="File" key="C:/electionCapping24/backend/sp-key.pem" certificate="C:/electionCapping24/backend/sp-cert.pem"/>
 </ApplicationDefaults>
