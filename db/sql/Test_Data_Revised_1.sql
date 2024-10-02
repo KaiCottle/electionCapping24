@@ -17,7 +17,7 @@ INSERT INTO People (Fname, Lname) VALUES
     ( 'Eitel', 'Lauria');
 
 -- Inserting all the committees
-INSERT INTO Committees (Committee_Name) VALUES
+INSERT INTO Committees (Cname) VALUES
     ('Academic Affairs Committee (AAC)'),
     ('Academic Standards'),
     ('Ad hoc Term Faculty Committee'),
