@@ -44,19 +44,20 @@
 .sso-button {
     background-color: #b80e0e; 
     color: white;
-    padding: 10px 60px;
-    border: none;
-    border-radius: 10px; 
+    padding: 20px 70px;
+    border: 2px solid #b80e0e;
+    border-radius: 15px; 
     cursor: pointer;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 600;
     transition-duration: 0.4s;
 }
 
 .sso-button:hover{
     background-color: #921010;
+    border: 2px solid rgb(203, 44, 44);
+    color: #dddddd;
 }
-
 
 
 .admin-login {
@@ -65,7 +66,7 @@
     color: #d3d3d3; 
     text-decoration: none;
     transition-duration: 0.4s;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .admin-login:hover{
