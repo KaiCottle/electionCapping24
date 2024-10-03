@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+*{
+    font-family: Inter;
+}
+.m-login {
+    position: relative;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover; 
+    z-index: 1;
+}
+
+.logo{
+    width: 325px;
+    margin-bottom: 20px;
+    z-index: 2;
+}
+
+.login-box {
+    position: relative; 
+    background: rgba(255, 255, 255, 0.15); 
+    padding: 35px 110px; 
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37); 
+    backdrop-filter: blur(4px);
+    z-index: 2; 
+    text-align: center; 
+    border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.sso-button {
+    background-color: #b80e0e; 
+    color: white;
+    padding: 10px 60px;
+    border: none;
+    border-radius: 10px; 
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: 600;
+    transition-duration: 0.4s;
+}
+
+.sso-button:hover{
+    background-color: #921010;
+}
+
+
+
+.admin-login {
+    display: block; 
+    margin-top: 25px; 
+    color: #d3d3d3; 
+    text-decoration: none;
+    transition-duration: 0.4s;
+    margin-bottom: 25px;
+}
+
+.admin-login:hover{
+    color: #ababab;
+    font-weight: bolder;
+}
+
+#loginText{
+    color: white;
+    font-size: 40px;
+    padding-bottom: 15px;
+}
