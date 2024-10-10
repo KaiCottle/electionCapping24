@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';  // login component
 import AdminLogin from './AdminLogin'; // *admin* login component
 import AdminView from './AdminView'; // *admin* view component
+import UserProfile from './UserProfile'; // User profile component
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
         {/* Route for the admin view page */}
         <Route path="/adminlogin" element={<AdminView />} />
 
+        {/* Route for the user profile page */}
+        <Route path='/User-Profile' element={<UserProfile/>}/>
       </Routes>
     </Router>
   );
