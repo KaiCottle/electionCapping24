@@ -15,7 +15,7 @@ const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/admin/login', {
+      const response = await fetch('http://localhost:3001/admin-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const AdminLogin: React.FC = () => {
       if (response.ok) {
         // Optionally, store user details in local storage or state if needed
         // Redirect to admin view if login is successful
-        navigate('/adminview');
+        navigate('/admin-view');
       } else {
         setError(data.message); // Show error message if login fails
       }

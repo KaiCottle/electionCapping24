@@ -5,7 +5,12 @@ const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
 
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow requests from your React app (port 3000 in this case)
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your React app's port or domain
+}));
+
 app.use(express.json()); // Parse incoming JSON data
 
 // Connect to the PostgreSQL database
@@ -17,7 +22,7 @@ const hashPassword = (password) => {
 };
 
 // Route to handle admin login
-app.post('/admin/login', async (req, res) => {
+app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
 
     try {
@@ -32,8 +37,6 @@ app.post('/admin/login', async (req, res) => {
 
         // Hash the provided password and compare with the stored hash
         const hashedInputPassword = hashPassword(password); // Hash the input password
-        console.log('Input password hash:', hashedInputPassword);
-        console.log('Stored password hash:', admin.ThePassword); // Check this field name
         if (hashedInputPassword !== admin.thepassword) { // Use correct case for ThePassword
             return res.status(400).json({ message: 'Invalid username or password' });
         }
@@ -70,6 +73,6 @@ app.get('/faculty', async (req, res) => {
 });
 
 // Start server
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(3001, () => {
+    console.log('Server is running on port 3001');
 });
