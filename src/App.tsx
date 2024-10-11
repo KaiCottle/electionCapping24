@@ -14,10 +14,10 @@ function App() {
         <Route path="/" element={<Login />} />
 
         {/* Route for the admin login page */}
-        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
 
         {/* Route for the admin view page */}
-        <Route path="/adminlogin" element={<AdminView />} />
+        <Route path="/admin-view" element={<AdminView />} />
 
         {/* Route for the user profile page */}
         <Route path='/User-Profile' element={<UserProfile/>}/>

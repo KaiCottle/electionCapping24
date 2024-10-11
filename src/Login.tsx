@@ -12,7 +12,7 @@ function Login() {
       <div className='login-box'>
         <h2 id='loginText'>Login:</h2>
         <button className='sso-button'>Marist SSO</button>
-        <a href='/admin' className='admin-login'>Admin? Login here</a>
+        <a href='/admin-login' className='admin-login'>Admin? Login here</a>
       </div>
     </div>
   );
