@@ -86,3 +86,6 @@ INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement
     (5, 'Eitel.Lauria@marist.edu', 5, false, 'Eitel Lauria', 'http://example.com/eitel_lauria',
      'I have chaired the AAC and served as the Vice Chair of FAC during the pandemic. I currently chair the faculty search committee in my department. I served on the presidential search committee, the CIO''s search committee, the previous middle-states committee, and co-chaired one of the strategic plan working groups. I have helped hire and mentored most of the faculty in my department through tenure and promotion. I will be on sabbatical in Spring 2025.',
      '2024-03-19 17:12:37');
+
+INSERT INTO Admins (aid, uname, thepassword, godmode) VALUES
+	(1, 'admin1', 'cd6357efdd966de8c0cb2f876cc89ec74ce35f0968e11743987084bd42fb8944', TRUE)
