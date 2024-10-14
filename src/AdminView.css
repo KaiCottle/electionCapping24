@@ -1,0 +1,55 @@
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .app-container {
+    background-color: #f4f4f4;
+    min-height: 100vh;
+  }
+  
+  .header {
+    background-color: #b80e0e;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .button-container {
+    margin: 20px;
+    text-align: center;
+  }
+  
+  button {
+    background-color: #b80e0e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #b80e0e;
+  }
+  
+  .ag-theme-alpine {
+    --ag-header-background-color: #b80e0e;
+    --ag-header-foreground-color: white;
+    --ag-row-hover-color: #fceaea;
+    --ag-odd-row-background-color: #fff;
+    --ag-font-family: 'Roboto', sans-serif;
+    --ag-font-size: 14px;
+    --ag-cell-horizontal-border: 1px solid #ddd;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 24px;
+    color: #b80e0e;
+  }

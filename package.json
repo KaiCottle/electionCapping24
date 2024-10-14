@@ -10,15 +10,21 @@
     "@types/node": "^16.18.109",
     "@types/react": "^18.3.9",
     "@types/react-dom": "^18.3.0",
+    "ag-grid": "^18.1.2",
+    "ag-grid-react": "^32.2.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "pg": "^8.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"react-scripts start\" \"node server.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

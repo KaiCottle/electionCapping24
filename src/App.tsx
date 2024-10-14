@@ -1,25 +1,28 @@
+// App.tsx
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './Login';  // login component
+import AdminLogin from './AdminLogin'; // *admin* login component
+import AdminView from './AdminView'; // *admin* view component
+import UserProfile from './UserProfile'; // User profile component
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Default route for the login page */}
+        <Route path="/" element={<Login />} />
+
+        {/* Route for the admin login page */}
+        <Route path="/admin-login" element={<AdminLogin />} />
+
+        {/* Route for the admin view page */}
+        <Route path="/admin-view" element={<AdminView />} />
+
+        {/* Route for the user profile page */}
+        <Route path='/User-Profile' element={<UserProfile/>}/>
+      </Routes>
+    </Router>
   );
 }
 
