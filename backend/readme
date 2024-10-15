@@ -1,0 +1,9 @@
+Instructions for VM:
+
+Shibboleth files are located in /etc/shibboleth
+- The main config file is shibboleth.xml
+
+ Apache2 files are located in /etc/shibboleth
+ - the main conf file is faculelections.marist.edu-ssl.conf
+
+ The location to clone our our code into the VM is located at /var/www/html
