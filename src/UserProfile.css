@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+*{
+    font-family: "Inter", serif;
+}
+
+.profile-form-container {
+    background-color: #f8f8f8;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 24px;
+    color: #b21e2d;
+    text-align: center;
+  }
+  
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+  }
+  
+  .form-group {
+    margin-bottom: 30px;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: #333;
+    padding-bottom: 10px;
+  }
+  
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #b21e2d;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  input[type="text"]::placeholder,
+  textarea::placeholder {
+    color: #ccc;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #b21e2d;
+    border-radius: 8px;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .checkbox-group label {
+    font-size: 14px;
+  }
+  
+  .save-button {
+    background-color: #b21e2d;
+    border: 2px solid #fe6978;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    margin: auto;
+    transition-duration: 0.4s;
+  }
+
+  .save-button:hover{
+    background-color: #831b25;
+  }
+  
+  .save-button img {
+    width: 30px;
+  }
+  
