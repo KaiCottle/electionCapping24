@@ -1,29 +1,44 @@
-// App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Login';  // login component
-import AdminLogin from './AdminLogin'; // *admin* login component
-import AdminView from './AdminView'; // *admin* view component
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './Login';  // Login component
+import AdminLogin from './AdminLogin'; // Admin login component
+import AdminView from './AdminView'; // Admin view component
 import UserProfile from './UserProfile'; // User profile component
+import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Default route for the login page */}
-        <Route path="/" element={<Login />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Default route for the login page */}
+          <Route path="/" element={<Login />} />
 
-        {/* Route for the admin login page */}
-        <Route path="/admin-login" element={<AdminLogin />} />
+          {/* Route for the admin login page */}
+          <Route path="/admin-login" element={<AdminLogin />} />
 
-        {/* Route for the admin view page */}
-        <Route path="/admin-view" element={<AdminView />} />
+          {/* Protected route for the admin view page */}
+          <Route path="/admin-view" element={<ProtectedAdminRoute />} />
 
-        {/* Route for the user profile page */}
-        <Route path='/User-Profile' element={<UserProfile/>}/>
-      </Routes>
-    </Router>
+          {/* Route for the user profile page */}
+          <Route path='/User-Profile' element={<UserProfile />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
+
+// ProtectedAdminRoute component to handle admin access
+const ProtectedAdminRoute = () => {
+  const { isAuthenticated, isAdmin } = useAuth();
+
+  return (
+    isAuthenticated && isAdmin ? (
+      <AdminView />
+    ) : (
+      <Navigate to="/admin-login" replace />
+    )
+  );
+};
 
 export default App;
