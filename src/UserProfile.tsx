@@ -3,6 +3,7 @@ import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
 import saveIcon from './assets/save-icon.png';
 import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
   const [preferredName, setPreferredName] = useState('');
@@ -14,6 +15,12 @@ const UserProfile: React.FC = () => {
     { value: 'COM1', label: 'COM1' },
     { value: 'COM2', label: 'COM2' },
     { value: 'COM3', label: 'COM3' },
+  ];
+
+  const schoolOptions = [
+    { value: 'School of Business', label: 'School of Business' },
+    { value: 'School of Science', label: 'School of Science' },
+    { value: 'School of Liberal Arts', label: 'School of Liberal Arts' },
   ];
 
   const handleCommitteeChange = (selectedOptions: any) => {
@@ -40,12 +47,12 @@ const UserProfile: React.FC = () => {
           {/* Dropdown for School */}
           <div className="form-group">
             <label>Select your School from the dropdown menu</label>
-            <select value={school} onChange={(e) => setSchool(e.target.value)}>
-              <option value="">Select School</option>
-              <option value="School of Business">School of Business</option>
-              <option value="School of Science">School of Science</option>
-              <option value="School of Liberal Arts">School of Liberal Arts</option>
-            </select>
+            <Select
+              options={schoolOptions}
+              value={schoolOptions.find(option => option.value === school)}
+              onChange={(selectedOption) => setSchool(selectedOption?.value || '')}
+              placeholder="Select School"
+            />
           </div>
 
           {/* Multi-select Committees */}
