@@ -7,7 +7,7 @@
 .profile-form-container {
     background-color: #f8f8f8;
     border-radius: 20px;
-    padding: 20px;
+    padding: 50px;
     max-width: 500px;
     margin: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -27,6 +27,7 @@ h1 {
 
 .form-group {
     margin-bottom: 30px;
+    width: 95%;
 }
 
 .form-group label {

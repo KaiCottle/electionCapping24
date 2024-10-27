@@ -35,7 +35,7 @@ const UserProfile: React.FC = () => {
         <form className="profile-form">
           {/* Preferred Name Input */}
           <div className="form-group">
-            <label>Enter your preferred name (how it will appear on ballot)</label>
+            <label>Enter your preferred name (how it will appear on the ballot)</label>
             <input
               type="text"
               value={preferredName}
@@ -59,6 +59,7 @@ const UserProfile: React.FC = () => {
           <div className="form-group">
             <label>Select the committees you have been a part of (can select multiple)</label>
             <CreatableSelect
+              className='select-input'
               isMulti
               options={committeeOptions}
               onChange={handleCommitteeChange}
