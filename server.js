@@ -6,9 +6,20 @@ const { client, connectDB } = require('./db/connection'); // Import the client a
 
 const app = express();
 
-// Configure CORS to allow requests from your React app (port 3000 in this case)
+// List of allowed origins
+const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000'];
+
+// Configure CORS to allow requests from your React app
 app.use(cors({
-    origin: 'http://localhost:3000', // Replace with your React app's port or domain
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
 }));
 
 app.use(express.json()); // Parse incoming JSON data
