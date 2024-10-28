@@ -76,7 +76,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/faculty')
+    fetch('http://10.11.29.103:3001/faculty')
       .then(response => response.json())
       .then(data => setRowData(data))
       .catch(error => console.error('Error fetching data:', error));
