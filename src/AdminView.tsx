@@ -8,18 +8,19 @@ import './AdminView.css';
 interface Faculty {
   fid: number;
   email: string;
-  schoolid?: number; // This field is not fetched from the query, so make it optional
+  schoolid?: number;
   sname: string;
   ishidden: boolean;
   prefname: string;
   url: string;
-  thestatement?: string; // Optional field
-  lastupdated?: string;  // Optional field
+  thestatement?: string;
+  lastupdated?: string;
 }
 
 const App: React.FC = () => {
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
   const [rowData, setRowData] = useState<Faculty[]>([]);
+  const [electionName, setElectionName] = useState<string>('');
 
   const columnDefs: ColDef[] = [
     {
@@ -33,8 +34,8 @@ const App: React.FC = () => {
     { headerName: 'School', field: 'sname', sortable: true, filter: true },
     { headerName: 'Preferred Name', field: 'prefname', sortable: true, filter: true },
     { headerName: 'URL', field: 'url', sortable: true, filter: true },
-    { headerName: 'The Statement', field: 'thestatement', sortable: true, filter: true }, // Optional field
-    { headerName: 'Last Updated', field: 'lastupdated', sortable: true, filter: true }, // Optional field
+    { headerName: 'The Statement', field: 'thestatement', sortable: true, filter: true },
+    { headerName: 'Last Updated', field: 'lastupdated', sortable: true, filter: true },
   ];
 
   const onGridReady = (params: GridReadyEvent) => {
@@ -43,35 +44,33 @@ const App: React.FC = () => {
 
   const onExportCSV = () => {
     if (gridApi) {
-      gridApi.exportDataAsCsv({
-        onlySelected: true,
-        processCellCallback: (params) => {
-          if (params.column.getColId() === 'prefname') {
-            return params.value;
-          } else if (params.column.getColId() === 'sname') {
-            return params.value;
-          }
-          return null;
-        },
-        columnKeys: ['prefname', 'sname'],
-      });
-    }
-  };
+      const selectedRows = gridApi.getSelectedRows();
+  
+      const csvData = selectedRows.map((row) => {
+        const combinedStatement = `${row.thestatement || ''}
 
-  const onExportExcel = () => {
-    if (gridApi) {
-      gridApi.exportDataAsExcel({
-        onlySelected: true,
-        processCellCallback: (params) => {
-          if (params.column.getColId() === 'prefname') {
-            return params.value;
-          } else if (params.column.getColId() === 'sname') {
-            return params.value;
-          }
-          return null;
-        },
-        columnKeys: ['prefname', 'sname'],
+<a href="${row.url || ''}" target="_blank">${row.prefname}'s bio on marist.edu<br> Please note - if you are on an Android Phone, don't click! Otherwise you will exit the election</a>`;
+  
+        return [
+          electionName,
+          row.prefname,
+          'Click the "i" for more information on this candidate',
+          `"${combinedStatement}"`,
+        ];
       });
+  
+      const csvRows = [
+        ['Election Name', 'Preferred Name', 'Short Description', 'Statement'],
+        ...csvData,
+      ];
+  
+      const csvContent = csvRows.map((e) => e.join('\t')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const fileName = electionName ? `${electionName}.csv` : 'faculty_export.csv';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.click();
     }
   };
 
@@ -87,9 +86,18 @@ const App: React.FC = () => {
       <div className="header">
         <h1>Marist College Faculty Directory</h1>
       </div>
+      <div className="input-card">
+        <label htmlFor="electionName">Election Name:</label>
+        <input
+          type="text"
+          id="electionName"
+          value={electionName}
+          onChange={(e) => setElectionName(e.target.value)}
+          placeholder="Enter Election Name"
+        />
+      </div>
       <div className="button-container">
-        <button onClick={onExportCSV}>Export Selected to CSV</button>
-        <button onClick={onExportExcel}>Export Selected to Excel</button>
+        <button className="fancy-button" onClick={onExportCSV}>Export Selected to CSV</button>
       </div>
       <div className="ag-theme-alpine" style={{ height: '600px', width: '90%', margin: '0 auto' }}>
         <AgGridReact
