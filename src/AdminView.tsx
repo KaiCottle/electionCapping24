@@ -44,13 +44,20 @@ const App: React.FC = () => {
 
   const onExportCSV = () => {
     if (gridApi) {
-      const selectedRows = gridApi.getSelectedRows();
+      // Get all selected nodes
+      const selectedNodes = gridApi.getSelectedNodes();
   
-      const csvData = selectedRows.map((row) => {
+      // Filter the selected nodes to only those currently displayed (visible) in the grid
+      const displayedSelectedRows = selectedNodes
+        .filter((node) => node.displayed)
+        .map((node) => node.data);
+  
+      // Map the rows to the CSV data format
+      const csvData = displayedSelectedRows.map((row) => {
         const combinedStatement = `${row.thestatement || ''}
-
-<a href="${row.url || ''}" target="_blank">${row.prefname}'s bio on marist.edu<br> Please note - if you are on an Android Phone, don't click! Otherwise you will exit the election</a>`;
   
+  <a href="${row.url || ''}" target="_blank">${row.prefname}'s bio on marist.edu<br> Please note - if you are on an Android Phone, don't click! Otherwise you will exit the election</a>`;
+        
         return [
           electionName,
           row.prefname,
@@ -59,20 +66,25 @@ const App: React.FC = () => {
         ];
       });
   
+      // Prepare the CSV rows
       const csvRows = [
         ['Election Name', 'Preferred Name', 'Short Description', 'Statement'],
         ...csvData,
       ];
   
+      // Convert the CSV rows to content
       const csvContent = csvRows.map((e) => e.join('\t')).join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const fileName = electionName ? `${electionName}.csv` : 'faculty_export.csv';
+  
+      // Trigger the CSV download
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = fileName;
       link.click();
     }
   };
+  
 
   useEffect(() => {
     fetch('http://10.11.29.103:3001/faculty')
