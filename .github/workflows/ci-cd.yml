@@ -14,11 +14,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Deploy to Server
-      uses: appleboy/ssh-action@v0.1.12
+      uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        host: 10.11.29.103
+        username: developer
+        key: 717288384919whqjainwn18274
         script: |
           # Navigate to the app directory or clone it if not present
           cd /path/to/your-app || git clone https://github.com/your-username/electionCapping24.git /path/to/your-app && cd /path/to/your-app
