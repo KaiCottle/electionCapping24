@@ -20,8 +20,8 @@ jobs:
 
     - name: Deploy to Server
       env:
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: 10.11.29.103
+        SERVER_USER: developer
       run: |
         ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
           # Navigate to app directory or clone if not already present
