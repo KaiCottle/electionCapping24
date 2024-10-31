@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // Adjust the path as necessary
 import './Login.css';
 import './AdminLogin.css';
 import backgroundImage from './assets/background.jpg';
@@ -11,11 +12,12 @@ const AdminLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get the login function from context
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/admin-login', {
+      const response = await fetch('http://10.11.29.103:3001/admin-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +28,9 @@ const AdminLogin: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Optionally, store user details in local storage or state if needed
+        // Call the login function from the Auth context, marking the user as an admin
+        login(true); // Pass true to indicate admin login
+
         // Redirect to admin view if login is successful
         navigate('/admin-view');
       } else {
