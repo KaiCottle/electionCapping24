@@ -13,26 +13,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: 717288384919whqjainwn18274
-
     - name: Deploy to Server
-      env:
-        SERVER_IP: 10.11.29.103
-        SERVER_USER: developer
-      run: |
-        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
-          # Navigate to app directory or clone if not already present
+      uses: appleboy/ssh-action@v0.1.12
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          # Navigate to the app directory or clone it if not present
           cd /path/to/your-app || git clone https://github.com/your-username/electionCapping24.git /path/to/your-app && cd /path/to/your-app
-
-          # Pull latest changes
+          
+          # Pull the latest changes
           git pull origin main
-
-          # Install dependencies (assuming a Node.js app; adjust as necessary)
+          
+          # Install dependencies (assuming Node.js; adjust as needed)
           npm install
+          
+          # Restart the app (using pm2, nohup, or similar)
+          pm2 restart app || pm2 start app.js --name app
 
-          # Restart the app (using pm2, or nohup to run in the background)
-          pm2 restart app || pm2 start app.js --name app  # Replace 'app.js' with your entry file
-        EOF
