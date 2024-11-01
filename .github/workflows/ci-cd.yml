@@ -20,7 +20,7 @@ jobs:
       env:
         SSH_PASSWORD: MaristDev2024!
       run: |
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        sshpass -p "$SSH_PASSWORD" ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           # Navigate to the app directory or clone it if not present
           cd /path/to/your-app || git clone https://github.com/your-username/electionCapping24.git /path/to/your-app && cd /path/to/your-app
           
