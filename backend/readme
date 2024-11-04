@@ -1,65 +1,6 @@
-To get metadata to send to Marist SSO admin:
+Instructions for VM:
 
-Set Up Your Web Server:
+Shibboleth files are located in /etc/shibboleth
+- The main config file is shibboleth.xml
 
-Ensure your web server (e.g., IIS on Windows or Apache on Linux) is installed and configured to serve your application.
-Install Shibboleth SP:
-
-Install the Shibboleth SP software on your server.
-Configure Shibboleth SP:
-
-Ensure your shibboleth2.xml file is correctly configured with the necessary paths and settings.
-Enable HTTPS:
-
-Ensure your web server is configured to use HTTPS, as the metadata URL must be accessed over HTTPS.
-Start the Shibboleth SP Service:
-
-Ensure the Shibboleth SP service is running.
-
-
-
-Apache config:
-Install Apache:
-sudo apt-get update
-sudo apt-get install apache2
-
-Install Shibboleth SP:
-sudo apt-get install libapache2-mod-shib2
-
-Configure Apache:
-
-Edit your Apache configuration file (e.g., /etc/apache2/sites-available/000-default.conf):
-
-<VirtualHost *:443>
-    ServerName your.sp.example.com
-    DocumentRoot /var/www/html
-
-    SSLEngine on
-    SSLCertificateFile /path/to/your/certificate.crt
-    SSLCertificateKeyFile /path/to/your/private.key
-
-    <Location /secure>
-        AuthType shibboleth
-        ShibRequestSetting requireSession 1
-        require valid-user
-    </Location>
-
-    <Location /Shibboleth.sso>
-        SetHandler shib
-    </Location>
-
-    ShibRequestSetting applicationId default
-    ShibRequestSetting requireSession 1
-</VirtualHost>
-
-Enable the SSL module and site configuration:
-sudo a2enmod ssl
-sudo a2ensite default-ssl
-sudo systemctl restart apache2
-
-Restart Shibboleth SP Service:
-sudo systemctl restart shibd
-
-Generate Metadata
-Once your web server and Shibboleth SP are set up and running, you can generate the metadata by accessing the following URL in your web browser:
-https://your.sp.example.com/Shibboleth.sso/Metadata
+Server files are located on the vm at /var/www/html
