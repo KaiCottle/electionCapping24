@@ -7,11 +7,16 @@ const https = require('https');
 const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
+const session = require('express-session');
 
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['https://localhost:3000', 'https://10.11.29.103:3000', 'https://facelect.capping.ecrl.marist.edu:3000'];
+const allowedOrigins = [
+    'https://localhost:3000',
+    'https://10.11.29.103:3000',
+    'https://facelect.capping.ecrl.marist.edu:3000'
+];
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
@@ -27,6 +32,18 @@ app.use(cors({
 }));
 
 app.use(express.json()); // Parse incoming JSON data
+
+// Configure session middleware
+app.use(session({
+    secret: 'your-secret-key', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
+}));
+
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connect to the PostgreSQL database
 connectDB();
@@ -59,9 +76,6 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
@@ -82,9 +96,34 @@ app.post('/admin-login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
-        res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
+        // If successful, return a success message (can also return user data if needed)
+        res.json({ message: 'Login successful', admin: { AID: admin.AID, Uname: admin.Uname, Godmode: admin.Godmode } });
+    } catch (err) {
+        console.error('Error during login:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Example existing route for fetching faculty data (unchanged)
+app.get('/faculty', async (req, res) => {
+    try {
+        const result = await client.query(` 
+            SELECT 
+                faculty.fid,
+                faculty.email,
+                faculty.ishidden,
+                faculty.prefname,
+                faculty.url,
+                faculty.thestatement,
+                faculty.lastupdated,
+                schools.sname AS sname
+            FROM faculty
+            LEFT JOIN schools ON faculty.schoolid = schools.sid;
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Database query error:', err);
+        res.status(500).send('Error querying the database');
     }
 });
 
