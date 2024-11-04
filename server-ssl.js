@@ -11,7 +11,7 @@ const SamlStrategy = require('passport-saml').Strategy;
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000'];
+const allowedOrigins = ['https://localhost:3000', 'https://10.11.29.103:3000', 'https://facelect.capping.ecrl.marist.edu:3000'];
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
