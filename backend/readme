@@ -3,4 +3,4 @@ Instructions for VM:
 Shibboleth files are located in /etc/shibboleth
 - The main config file is shibboleth.xml
 
-brendon-dev branch is cloned on the vm located at /var/www/html/electionCapping24
+Server files are located on the vm at /var/www/html

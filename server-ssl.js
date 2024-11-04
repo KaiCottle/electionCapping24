@@ -3,6 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
+const https = require('https');
+const fs = require('fs');
+const passport = require('passport');
+const SamlStrategy = require('passport-saml').Strategy;
 
 const app = express();
 
@@ -32,6 +36,32 @@ const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
 };
 
+// Passport SAML strategy configuration
+passport.use(new SamlStrategy({
+    path: '/login/callback',
+    entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
+    issuer: 'Marist-SSO',
+    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
+    privateCert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
+    identifierFormat: null,
+    decryptionPvk: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
+    validateInResponseTo: false,
+    disableRequestedAuthnContext: true
+}, (profile, done) => {
+    return done(null, profile);
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
@@ -52,38 +82,33 @@ app.post('/admin-login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
-        // If successful, return a success message (can also return user data if needed)
-        res.json({ message: 'Login successful', admin: { AID: admin.AID, Uname: admin.Uname, Godmode: admin.Godmode } });
-    } catch (err) {
-        console.error('Error during login:', err);
-        res.status(500).json({ message: 'Server error' });
+        res.status(200).json({ message: 'Login successful' });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
-// Example existing route for fetching faculty data (unchanged)
-app.get('/faculty', async (req, res) => {
-    try {
-        const result = await client.query(` 
-            SELECT 
-                faculty.fid,
-                faculty.email,
-                faculty.ishidden,
-                faculty.prefname,
-                faculty.url,
-                faculty.thestatement,
-                faculty.lastupdated,
-                schools.sname AS sname
-            FROM faculty
-            LEFT JOIN schools ON faculty.schoolid = schools.sid;
-        `);
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Database query error:', err);
-        res.status(500).send('Error querying the database');
-    }
+// SSO login route
+app.get('/login', passport.authenticate('saml', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+}));
+
+// SSO callback route
+app.post('/login/callback', passport.authenticate('saml', {
+    failureRedirect: '/login',
+    failureFlash: true
+}), (req, res) => {
+    res.redirect('/');
 });
 
-// Start server
-app.listen(3001, () => {
-    console.log('Server is running on port 3001');
+// Read SSL certificate and key
+const options = {
+    key: fs.readFileSync('/var/www/html/backend/sp-key.pem'),
+    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem')
+};
+
+// Create HTTPS server
+https.createServer(options, app).listen(443, () => {
+    console.log('HTTPS Server running on port 443');
 });
