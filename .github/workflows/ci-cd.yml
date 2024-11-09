@@ -17,7 +17,7 @@ jobs:
       run: sudo apt-get install -y sshpass
 
     - name: Test Server Reachability
-      run: ping -c 4 ${{ secrets.SERVER_IP }}
+      run: ping -c 4 10.11.29.103
 
     - name: Debug SSH Connection
       env:
