@@ -22,7 +22,7 @@ jobs:
         SSH_USER: root
         SSH_PASSWORD: MaristDev2024!
       run: |
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_IP << 'EOF'
+        sshpass -p "$SSH_PASSWORD" ssh -vvv -o StrictHostKeyChecking=no $SSH_USER@$SSH_IP << 'EOF'
           # Navigate to the app directory or clone it if not present
           cd /path/to/your-app || git clone https://github.com/your-username/electionCapping24.git /path/to/your-app && cd /path/to/your-app
           
