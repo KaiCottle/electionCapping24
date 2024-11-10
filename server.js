@@ -4,10 +4,13 @@ const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
 
+const https = require('https'); // Import https module
+const fs = require('fs');       // Import fs module for reading certificate files
+
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000'];
+const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000','http://localhost:443', 'http://10.11.29.103:443', 'http://facelect.capping.ecrl.marist.edu:443'];
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
@@ -83,7 +86,18 @@ app.get('/faculty', async (req, res) => {
     }
 });
 
-// Start server
+// HTTPS configuration
+const httpsOptions = {
+    key: fs.readFileSync('backend/sp-key.pem'),    
+    cert: fs.readFileSync('backend/sp-cert.pem')   
+};
+
+// Start HTTPS server on port 443
+https.createServer(httpsOptions, app).listen(443, () => {
+    console.log('HTTPS server is running on port 443');
+});
+
+// Start HTTP server on port 3001
 app.listen(3001, () => {
-    console.log('Server is running on port 3001');
+    console.log('HTTP server is running on port 3001');
 });
