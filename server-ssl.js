@@ -7,11 +7,16 @@ const https = require('https');
 const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
+const session = require('express-session');
 
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000'];
+const allowedOrigins = [
+    'https://localhost:3000',
+    'https://10.11.29.103:3000',
+    'https://facelect.capping.ecrl.marist.edu:3000'
+];
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
@@ -28,6 +33,18 @@ app.use(cors({
 
 app.use(express.json()); // Parse incoming JSON data
 
+// Configure session middleware
+app.use(session({
+    secret: 'your-secret-key', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
+}));
+
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Connect to the PostgreSQL database
 connectDB();
 
@@ -37,19 +54,22 @@ const hashPassword = (password) => {
 };
 
 // Passport SAML strategy configuration
-passport.use(new SamlStrategy({
-    path: '/login/callback',
-    entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
-    issuer: 'Marist-SSO',
-    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    privateCert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    identifierFormat: null,
-    decryptionPvk: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    validateInResponseTo: false,
-    disableRequestedAuthnContext: true
-}, (profile, done) => {
-    return done(null, profile);
-}));
+passport.use(new SamlStrategy(
+    {
+      path: '/login/callback',
+      entryPoint: 'https://auth.it.marist.edu/idp',
+      issuer: 'Marist-SSO',
+      cert: fs.readFileSync('./backend/sp-cert.pem', 'utf-8'),
+    },
+    function(profile, done) {
+      findByEmail(profile.email, function(err, user) {
+        if (err) {
+          return done(err);
+        }
+        return done(null, user);
+      });
+    })
+  );
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -58,9 +78,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
     done(null, user);
 });
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
@@ -82,9 +99,34 @@ app.post('/admin-login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
-        res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
+        // If successful, return a success message (can also return user data if needed)
+        res.json({ message: 'Login successful', admin: { AID: admin.AID, Uname: admin.Uname, Godmode: admin.Godmode } });
+    } catch (err) {
+        console.error('Error during login:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Example existing route for fetching faculty data (unchanged)
+app.get('/faculty', async (req, res) => {
+    try {
+        const result = await client.query(` 
+            SELECT 
+                faculty.fid,
+                faculty.email,
+                faculty.ishidden,
+                faculty.prefname,
+                faculty.url,
+                faculty.thestatement,
+                faculty.lastupdated,
+                schools.sname AS sname
+            FROM faculty
+            LEFT JOIN schools ON faculty.schoolid = schools.sid;
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Database query error:', err);
+        res.status(500).send('Error querying the database');
     }
 });
 
@@ -104,11 +146,11 @@ app.post('/login/callback', passport.authenticate('saml', {
 
 // Read SSL certificate and key
 const options = {
-    key: fs.readFileSync('/var/www/html/backend/sp-key.pem'),
-    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem')
+    key: fs.readFileSync('./backend/sp-key.pem'),
+    cert: fs.readFileSync('./backend/sp-cert.pem')
 };
 
 // Create HTTPS server
-https.createServer(options, app).listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
 });
