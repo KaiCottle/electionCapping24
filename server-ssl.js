@@ -54,19 +54,22 @@ const hashPassword = (password) => {
 };
 
 // Passport SAML strategy configuration
-passport.use(new SamlStrategy({
-    path: '/login/callback',
-    entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
-    issuer: 'Marist-SSO',
-    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    privateCert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    identifierFormat: null,
-    decryptionPvk: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
-    validateInResponseTo: false,
-    disableRequestedAuthnContext: true
-}, (profile, done) => {
-    return done(null, profile);
-}));
+passport.use(new SamlStrategy(
+    {
+      path: '/login/callback',
+      entryPoint: 'https://auth.it.marist.edu/idp',
+      issuer: 'Marist-SSO',
+      cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
+    },
+    function(profile, done) {
+      findByEmail(profile.email, function(err, user) {
+        if (err) {
+          return done(err);
+        }
+        return done(null, user);
+      });
+    })
+  );
 
 passport.serializeUser((user, done) => {
     done(null, user);
