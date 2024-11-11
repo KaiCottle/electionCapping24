@@ -92,8 +92,8 @@ const httpsOptions = {
     cert: fs.readFileSync('backend/sp-cert.pem')   
 };
 
-// Start HTTPS server on port 443
-https.createServer(httpsOptions, app).listen(443, () => {
+// Start HTTPS server on port 8443
+https.createServer(httpsOptions, app).listen(8443, () => {
     console.log('HTTPS server is running on port 443');
 });
 
