@@ -59,7 +59,7 @@ passport.use(new SamlStrategy(
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp',
       issuer: 'Marist-SSO',
-      cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem', 'utf-8'),
+      cert: fs.readFileSync('./backend/sp-cert.pem', 'utf-8'),
     },
     function(profile, done) {
       findByEmail(profile.email, function(err, user) {
@@ -146,11 +146,11 @@ app.post('/login/callback', passport.authenticate('saml', {
 
 // Read SSL certificate and key
 const options = {
-    key: fs.readFileSync('/var/www/html/backend/sp-key.pem'),
-    cert: fs.readFileSync('/var/www/html/backend/sp-cert.pem')
+    key: fs.readFileSync('./backend/sp-key.pem'),
+    cert: fs.readFileSync('./backend/sp-cert.pem')
 };
 
 // Create HTTPS server
-https.createServer(options, app).listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
 });
