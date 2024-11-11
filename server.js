@@ -10,7 +10,12 @@ const fs = require('fs');       // Import fs module for reading certificate file
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000','https://localhost:8443','https://10.11.29.103:8443', 'https://facelect.capping.ecrl.marist.edu:8443'];
+const allowedOrigins = ['http://localhost:3000', 
+    'http://10.11.29.103:3000', 
+    'http://facelect.capping.ecrl.marist.edu:3000',
+    'https://localhost:8443',
+    'https://10.11.29.103:8443', 
+    'https://facelect.capping.ecrl.marist.edu:8443'];
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
