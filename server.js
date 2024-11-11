@@ -151,6 +151,6 @@ const options = {
 };
 
 // Create HTTPS server
-https.createServer(options, app).listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
 });
