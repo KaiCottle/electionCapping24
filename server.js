@@ -13,9 +13,9 @@ const app = express();
 
 // List of allowed origins
 const allowedOrigins = [
-    'https://localhost:3443',
-    'https://10.11.29.103:3000',
-    'https://facelect.capping.ecrl.marist.edu:3000'
+    'https://localhost:443',
+    'https://10.11.29.103:443',
+    'https://facelect.capping.ecrl.marist.edu:443'
 ];
 
 // Configure CORS to allow requests from your React app
@@ -59,7 +59,7 @@ passport.use(new SamlStrategy(
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp',
       issuer: 'Marist-SSO',
-      cert: fs.readFileSync('./backend/2024_FACELECT.CAPPING.ECRL.MARIST.EDU.CRT', 'utf-8'),
+      cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
     },
     function(profile, done) {
       findByEmail(profile.email, function(err, user) {
@@ -146,14 +146,14 @@ app.post('/login/callback', passport.authenticate('saml', {
 
 // Read SSL certificate and key
 const options = {
-    key: fs.readFileSync('./backend/FACELECT.CAPPING.ECRL.MARIST.EDU.KEY'),
-    cert: fs.readFileSync('./backend/2024_FACELECT.CAPPING.ECRL.MARIST.EDU.CRT'),
+    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
+    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
     ca: [
-        fs.readFileSync('./backend/2024_INCOMMONCA.CRT')
+        fs.readFileSync('./backend/2024_InCommonCA.crt')
     ]
 };
 
 // Create HTTPS server on port 3000
-https.createServer(options, app).listen(3443, () => {
-    console.log('HTTPS Server running on port 3443');
+https.createServer(options, app).listen(443, () => {
+    console.log('HTTPS Server running on port 443');
 });
