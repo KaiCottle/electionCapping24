@@ -3,6 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
+const https = require('https');
+const fs = require('fs');
+const passport = require('passport');
+const SamlStrategy = require('passport-saml').Strategy;
+const session = require('express-session');
 
 const https = require('https'); // Import https module
 const fs = require('fs');       // Import fs module for reading certificate files
@@ -10,7 +15,15 @@ const fs = require('fs');       // Import fs module for reading certificate file
 const app = express();
 
 // List of allowed origins
+<<<<<<< HEAD
 const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000','http://localhost:443', 'http://10.11.29.103:443', 'http://facelect.capping.ecrl.marist.edu:443'];
+=======
+const allowedOrigins = [
+    'https://localhost',
+    'https://10.11.29.103',
+    'https://facelect.capping.ecrl.marist.edu'
+];
+>>>>>>> 61494d1d9f02033965f7f18a6a59af0ace3cd238
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
@@ -27,6 +40,18 @@ app.use(cors({
 
 app.use(express.json()); // Parse incoming JSON data
 
+// Configure session middleware
+app.use(session({
+    secret: 'your-secret-key', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
+}));
+
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Connect to the PostgreSQL database
 connectDB();
 
@@ -34,6 +59,32 @@ connectDB();
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
 };
+
+// Passport SAML strategy configuration
+passport.use(new SamlStrategy(
+    {
+      path: '/login/callback',
+      entryPoint: 'https://auth.it.marist.edu/idp',
+      issuer: 'Marist-SSO',
+      cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
+    },
+    function(profile, done) {
+      findByEmail(profile.email, function(err, user) {
+        if (err) {
+          return done(err);
+        }
+        return done(null, user);
+      });
+    })
+);
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
@@ -86,6 +137,7 @@ app.get('/faculty', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 // HTTPS configuration
 const httpsOptions = {
     key: fs.readFileSync('backend/sp-key.pem'),    
@@ -95,6 +147,34 @@ const httpsOptions = {
 // Start HTTPS server on port 443
 https.createServer(httpsOptions, app).listen(443, () => {
     console.log('HTTPS server is running on port 443');
+=======
+// SSO login route
+app.get('/login', passport.authenticate('saml', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+}));
+
+// SSO callback route
+app.post('/login/callback', passport.authenticate('saml', {
+    failureRedirect: '/login',
+    failureFlash: true
+}), (req, res) => {
+    res.redirect('/');
+});
+
+// Read SSL certificate and key
+const options = {
+    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
+    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
+    ca: [
+        fs.readFileSync('./backend/2024_InCommonCA.crt')
+    ]
+};
+
+// Create HTTPS server on port 3000
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
+>>>>>>> 61494d1d9f02033965f7f18a6a59af0ace3cd238
 });
 
 // Start HTTP server on port 3001
