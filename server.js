@@ -15,15 +15,11 @@ const fs = require('fs');       // Import fs module for reading certificate file
 const app = express();
 
 // List of allowed origins
-<<<<<<< HEAD
-const allowedOrigins = ['http://localhost:3000', 'http://10.11.29.103:3000', 'http://facelect.capping.ecrl.marist.edu:3000','http://localhost:443', 'http://10.11.29.103:443', 'http://facelect.capping.ecrl.marist.edu:443'];
-=======
 const allowedOrigins = [
     'https://localhost',
     'https://10.11.29.103',
     'https://facelect.capping.ecrl.marist.edu'
 ];
->>>>>>> 61494d1d9f02033965f7f18a6a59af0ace3cd238
 
 // Configure CORS to allow requests from your React app
 app.use(cors({
@@ -137,17 +133,6 @@ app.get('/faculty', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-// HTTPS configuration
-const httpsOptions = {
-    key: fs.readFileSync('backend/sp-key.pem'),    
-    cert: fs.readFileSync('backend/sp-cert.pem')   
-};
-
-// Start HTTPS server on port 443
-https.createServer(httpsOptions, app).listen(443, () => {
-    console.log('HTTPS server is running on port 443');
-=======
 // SSO login route
 app.get('/login', passport.authenticate('saml', {
     successRedirect: '/',
@@ -174,7 +159,6 @@ const options = {
 // Create HTTPS server on port 3000
 https.createServer(options, app).listen(3001, () => {
     console.log('HTTPS Server running on port 3001');
->>>>>>> 61494d1d9f02033965f7f18a6a59af0ace3cd238
 });
 
 // Start HTTP server on port 3001
