@@ -13,9 +13,9 @@ const app = express();
 
 // List of allowed origins
 const allowedOrigins = [
-    'https://localhost:443',
-    'https://10.11.29.103:443',
-    'https://facelect.capping.ecrl.marist.edu:443'
+    'https://localhost',
+    'https://10.11.29.103',
+    'https://facelect.capping.ecrl.marist.edu'
 ];
 
 // Configure CORS to allow requests from your React app
@@ -154,6 +154,6 @@ const options = {
 };
 
 // Create HTTPS server on port 3000
-https.createServer(options, app).listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
 });
