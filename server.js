@@ -140,17 +140,7 @@ app.get('/faculty', async (req, res) => {
 });
 
 // SSO login route
-app.get('/login', (req, res, next) => {
-    console.log('SSO Login Initiated');
-    console.log('Request Headers:', req.headers);
-    console.log('Session:', req.session);
-    
-    passport.authenticate('saml', {
-        successRedirect: '/user-profile',
-        failureRedirect: '/login',
-        failureFlash: true
-    })(req, res, next);
-});
+app.get('/login', passport.authenticate('saml'));
 
 // SSO callback route
 app.post('/login/callback', 
