@@ -10,14 +10,18 @@ function handleSSOLogin() {
 
 
 function SSOLogin() {
-    return (
-        <div>
-            <h1>Login</h1>
-            <a href="/login">
-                <button>Marist SSO</button>
-            </a>
-        </div>
-    );
+  return (
+    <div className='m-login'>
+      <img src={backgroundImage} className='bg-image' alt='Background' />
+      <img src={logoImage} className='logo' alt='Marist Election Profile Logo' />
+      <div className='login-box'>
+        <h2 id='loginText'>Login:</h2>
+        <button className='sso-button' onClick={handleSSOLogin}>Marist SSO</button>
+
+        <a href='/admin-login' className='admin-login'>Admin? Login here</a>
+      </div>
+    </div>
+  );
 }
 
 export default SSOLogin;
