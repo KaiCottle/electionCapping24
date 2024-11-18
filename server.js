@@ -21,7 +21,8 @@ const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
     'http://localhost',
     'http://10.11.29.103',
-    'http://facelect.capping.ecrl.marist.edu'
+    'http://facelect.capping.ecrl.marist.edu',
+    '0.0.0.0'
 ];
 
 // Configure CORS to allow requests from your React app

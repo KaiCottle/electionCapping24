@@ -17,7 +17,7 @@ const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://10.11.29.103/admin-login', {
+      const response = await fetch('https://facelect.capping.ecrl.marist.edu/admin-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
