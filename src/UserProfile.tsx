@@ -1,44 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
+import saveIcon from './assets/save-icon.png';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // State to track if in edit mode
   const [preferredName, setPreferredName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
-  const [schoolOptions, setSchoolOptions] = useState<{ value: string; label: string }[]>([]);
-  const [committeeOptions, setCommitteeOptions] = useState<{ value: string; label: string }[]>([]);
 
-  // Fetch schools and committees
-  useEffect(() => {
-    // Fetch Schools
-    fetch('https://facelect.capping.ecrl.marist.edu:3001/schools')
-      .then((response) => response.json())
-      .then((data) => {
-        const formattedSchools = data.map((school: { SID: number; Sname: string }) => ({
-          value: school.Sname,
-          label: school.Sname,
-        }));
-        setSchoolOptions(formattedSchools);
-      })
-      .catch((error) => console.error('Error fetching schools:', error));
+  const committeeOptions = [
+    { value: 'COM1', label: 'COM1' },
+    { value: 'COM2', label: 'COM2' },
+    { value: 'COM3', label: 'COM3' },
+  ];
 
-    // Fetch Committees
-    fetch('https://facelect.capping.ecrl.marist.edu:3001/committees')
-      .then((response) => response.json())
-      .then((data) => {
-        const formattedCommittees = data.map((committee: { CID: number; Cname: string }) => ({
-          value: committee.Cname,
-          label: committee.Cname,
-        }));
-        setCommitteeOptions(formattedCommittees);
-      })
-      .catch((error) => console.error('Error fetching committees:', error));
-  }, []);
+  const schoolOptions = [
+    { value: 'School of Business', label: 'School of Business' },
+    { value: 'School of Science', label: 'School of Science' },
+    { value: 'School of Liberal Arts', label: 'School of Liberal Arts' },
+  ];
 
   const handleCommitteeChange = (selectedOptions: any) => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
@@ -46,7 +30,7 @@ const UserProfile: React.FC = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Trigger a save to the database here if needed
+    // You can also trigger a save to the database here
   };
 
   return (
@@ -55,6 +39,7 @@ const UserProfile: React.FC = () => {
       <h1 className='title'>Your Election Profile</h1>
       <div className="profile-form-container">
         {isEditing ? (
+          // Edit State
           <form className="profile-form">
             <div className="form-group">
               <label>Enter your preferred name (how it will appear on the ballot)</label>
@@ -97,10 +82,12 @@ const UserProfile: React.FC = () => {
             <div className="form-group">
               <button type="button" className="save-button" onClick={handleSave}>
                 <p>Save Profile</p>
+                {/* <img src={saveIcon} alt="Save" /> */}
               </button>
             </div>
           </form>
         ) : (
+          // View State
           <div className="profile-view">
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
