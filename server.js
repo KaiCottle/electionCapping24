@@ -157,12 +157,12 @@ const options = {
     ]
 };
 
-// Create HTTPS server on port 3000
-// https.createServer(options, app).listen(3001, () => {
-//     console.log('HTTPS Server running on port 3001');
-// });
+// Create HTTPS server on port 3001
+https.createServer(options, app).listen(3001, () => {
+    console.log('HTTPS Server running on port 3001');
+});
 
-// Start HTTP server on port 3001
-app.listen(3001, () => {
+// Start HTTP server on port 3002
+app.listen(3002, () => {
     console.log('HTTP server is running on port 3002');
 });
