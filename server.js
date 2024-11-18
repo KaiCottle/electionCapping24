@@ -166,6 +166,6 @@ https.createServer(options, app).listen(3001, () => {
 });
 
 // Start HTTP server on port 3001
-app.listen(3001, () => {
-    console.log('HTTP server is running on port 3001');
-});
+//app.listen(3001, () => {
+    //console.log('HTTP server is running on port 3001');
+//});
