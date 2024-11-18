@@ -11,7 +11,7 @@
 .profile-form-container {
     background-color: white;
     border-radius: 20px;
-    padding: 50px;
+    padding: 45px;
     max-width: 500px;
     margin: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -103,6 +103,9 @@ select,
     margin: auto;
     transition-duration: 0.4s;
     color: white;
+    padding: 0px 10px 0px 10px;
+    font-size: medium;
+    border-radius: 15px;
 }
 
 .save-button:hover {
