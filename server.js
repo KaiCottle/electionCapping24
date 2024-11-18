@@ -14,8 +14,10 @@ const app = express();
 // List of allowed origins
 const allowedOrigins = [
     'https://localhost:3001',
+    'https://localhost',
     'https://10.11.29.103',
     'https://facelect.capping.ecrl.marist.edu:3001',
+    'https://facelect.capping.ecrl.marist.edu',
     'http://localhost:3000',
     'http://localhost:3001',
     'http://10.11.29.103',
