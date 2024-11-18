@@ -29,17 +29,12 @@ app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        } else {
+        if (allowedOrigins.indexOf(origin) === -1) {
             const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
             return callback(new Error(msg), false);
         }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow common methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Specify headers your API expects
-    credentials: true, // Allow cookies and credentials
+        return callback(null, true);
+    }
 }));
 
 app.use(express.json()); // Parse incoming JSON data
