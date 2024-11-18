@@ -87,6 +87,7 @@ passport.deserializeUser((user, done) => {
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
+    console.log('Received admin login request'); // Log request received
     const { username, password } = req.body; // Capture username and password from request
 
     try {
