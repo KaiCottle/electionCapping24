@@ -27,6 +27,8 @@ function App() {
 
             {/* Route for the SSO Callback */}
             <Route path="/sso-callback" element={<SSOCallback />} />
+
+            
           </Routes>
         </Router>
     </AuthProvider>
