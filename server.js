@@ -9,20 +9,17 @@ const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
 
-const https = require('https'); // Import https module
-const fs = require('fs');       // Import fs module for reading certificate files
-
 const app = express();
 
 // List of allowed origins
 const allowedOrigins = [
-    'https://localhost',
+    'https://localhost:3001',
     'https://10.11.29.103',
-    'https://facelect.capping.ecrl.marist.edu',
-    'http://localhost',
+    'https://facelect.capping.ecrl.marist.edu:3001',
+    'http://localhost:3000',
+    'http://localhost:3001',
     'http://10.11.29.103',
-    'http://facelect.capping.ecrl.marist.edu',
-    '0.0.0.0'
+    'https://facelect.capping.ecrl.marist.edu:3000',
 ];
 
 // Configure CORS to allow requests from your React app
@@ -161,11 +158,11 @@ const options = {
 };
 
 // Create HTTPS server on port 3000
-https.createServer(options, app).listen(3001, () => {
-    console.log('HTTPS Server running on port 3001');
-});
+// https.createServer(options, app).listen(3001, () => {
+//     console.log('HTTPS Server running on port 3001');
+// });
 
 // Start HTTP server on port 3001
-//app.listen(3001, () => {
-    //console.log('HTTP server is running on port 3001');
-//});
+app.listen(3001, () => {
+    console.log('HTTP server is running on port 3002');
+});
