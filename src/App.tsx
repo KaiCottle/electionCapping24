@@ -5,6 +5,7 @@ import AdminLogin from './AdminLogin'; // Admin login component
 import AdminView from './AdminView'; // Admin view component
 import UserProfile from './UserProfile'; // User profile component
 import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
+import SSOCallback from './SSOCallback'; 
 import WebSocketComponent from './components/WebSocketClient';
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
 
             {/* Route for the user profile page */}
             <Route path="/User-Profile" element={<UserProfile />} />
+            
+            {/* Route for the SSO Callback */}
+            <Route path="/sso-callback" element={<SSOCallback />} />
           </Routes>
         </Router>
     </AuthProvider>

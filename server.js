@@ -143,6 +143,7 @@ app.get('/faculty', async (req, res) => {
 app.get('/login', (req, res, next) => {
     console.log('SSO Login Initiated');
     console.log('Request Headers:', req.headers);
+    console.log('Session:', req.session);
     
     passport.authenticate('saml', {
         successRedirect: '/user-profile',
@@ -151,14 +152,17 @@ app.get('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-
 // SSO callback route
-app.post('/login/callback', passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-}), (req, res) => {
-    res.redirect('/');
-});
+app.post('/login/callback', 
+    passport.authenticate('saml', {
+        failureRedirect: '/login',
+        failureFlash: true
+    }), 
+    (req, res) => {
+        console.log('SSO Callback - User Authenticated:', req.user);
+        res.redirect('/user-profile');
+    }
+);
 
 // Read SSL certificate and key
 const options = {
