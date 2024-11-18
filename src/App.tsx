@@ -12,26 +12,27 @@ import WebSocketComponent from './components/WebSocketClient';
 function App() {
   return (
     <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Default route for the login page */}
-            <Route path="/" element={<Login />} />
+      {/* Add basename to separate frontend routes */}
+      <Router basename="/frontend">
+        <Routes>
+          {/* Default route for the login page */}
+          <Route path="/" element={<Login />} />
 
-            {/* Route for the admin login page */}
-            <Route path="/admin-login" element={<AdminLogin />} />
+          {/* Route for the admin login page */}
+          <Route path="/admin-login" element={<AdminLogin />} />
 
-            {/* Protected route for the admin view page */}
-            <Route path="/admin-view" element={<ProtectedAdminRoute />} />
+          {/* Protected route for the admin view page */}
+          <Route path="/admin-view" element={<ProtectedAdminRoute />} />
 
-            {/* Route for the user profile page */}
-            <Route path="/User-Profile" element={<UserProfile />} />
+          {/* Route for the user profile page */}
+          <Route path="/User-Profile" element={<UserProfile />} />
 
-            {/* Route for the SSO Callback */}
-            <Route path="/sso-callback" element={<SSOCallback />} />
+          {/* Route for the SSO Callback */}
+          <Route path="/sso-callback" element={<SSOCallback />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 }
@@ -46,4 +47,6 @@ const ProtectedAdminRoute = () => {
     <Navigate to="/admin-login" replace />
   );
 };
+
 export default App;
+
