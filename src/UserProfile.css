@@ -3,9 +3,13 @@
 * {
     font-family: "Inter", serif;
 }
+.container{
+    background-color: white;
+}
+
 
 .profile-form-container {
-    background-color: #f8f8f8;
+    background-color: white;
     border-radius: 20px;
     padding: 50px;
     max-width: 500px;
@@ -14,7 +18,7 @@
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 30px;
     color: #b21e2d;
     text-align: center;
 }
@@ -107,6 +111,30 @@ select,
 
 .save-button img {
     width: 30px;
+}
+
+.profile-view{
+    font-size: larger;
+}
+
+.edit-button{
+    background-color: #b21e2d;
+    border: 2px solid #fe6978;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    margin: auto;
+    transition-duration: 0.4s;
+    color: white;
+    padding: 10px;
+    font-size: large;
+    border-radius: 15px;
+    margin-top: 30px;
+    margin-bottom: -10px;
+}
+
+.edit-button:hover {
+    background-color: #831b25;
 }
 
 
