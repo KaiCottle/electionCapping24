@@ -65,7 +65,7 @@ const hashPassword = (password) => {
 passport.use(new SamlStrategy(
     {
       path: '/login/callback',
-      entryPoint: 'https://auth.it.marist.edu/idp',
+      entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1',
       issuer: 'Marist-SSO',
       cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
     },
