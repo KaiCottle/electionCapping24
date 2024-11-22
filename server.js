@@ -55,7 +55,7 @@ const hashPassword = (password) => {
 passport.use(new SamlStrategy(
     {
       path: '/login/callback',
-      entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
+      entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/POST-SimpleSign/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
       cert: fs.readFileSync('./backend/idp_metadata.xml', 'utf-8'),
     },
