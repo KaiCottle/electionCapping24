@@ -129,7 +129,7 @@ app.get('/faculty', async (req, res) => {
 });
 
 // SSO login route
-app.get('/login', passport.authenticate('saml', {
+app.get('/sso/login', passport.authenticate('saml', {
     successRedirect: '/user-profile',
     failureRedirect: '/login'
 }));
