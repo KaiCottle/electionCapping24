@@ -25,9 +25,6 @@ function App() {
 
           {/* Route for the SSO redirect */}
           <Route path="/sso/login" element={<SSORedirect />} />
-
-          {/* Catch-all route to redirect to the login page */}
-          <Route path="*" element={<Navigate to="/" />} />          
         </Routes>
       </Router>
     </AuthProvider>
