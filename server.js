@@ -55,9 +55,9 @@ const hashPassword = (password) => {
 passport.use(new SamlStrategy(
     {
       path: '/login/callback',
-      entryPoint: 'https://auth.it.marist.edu/idp',
-      issuer: 'Marist-SSO',
-      cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
+      entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO', // Updated entry point
+      issuer: 'https://facelect.capping.ecrl.marist.edu',
+      cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'), // Replace with the path to your IdP certificate
     },
     function(profile, done) {
       findByEmail(profile.email, function(err, user) {
@@ -130,7 +130,7 @@ app.get('/faculty', async (req, res) => {
 
 // SSO login route
 app.get('/login', passport.authenticate('saml', {
-    successRedirect: '/',
+    successRedirect: '/user-profile',
     failureRedirect: '/login'
 }));
 
@@ -139,7 +139,7 @@ app.post('/login/callback', passport.authenticate('saml', {
     failureRedirect: '/login',
     failureFlash: true
 }), (req, res) => {
-    res.redirect('/');
+    res.redirect('/user-profile');
 });
 
 // Read SSL certificate and key
