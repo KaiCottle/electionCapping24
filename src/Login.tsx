@@ -6,12 +6,7 @@ import Footer from './components/footer/footer';
 
 function Login() {
   const handleSSOLogin = () => {
-    // Create a form element to submit the request to the backend /sso/login route
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = '/sso/login';
-    document.body.appendChild(form);
-    form.submit();
+    window.location.href = '/sso/login'; // Redirect to the SSO login route
   };
 
   return (
