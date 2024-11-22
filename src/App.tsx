@@ -44,12 +44,11 @@ const ProtectedAdminRoute = () => {
   );
 };
 
-function SSORedirect() {
+const SSORedirect: React.FC = () => {
   React.useEffect(() => {
     window.location.href = '/sso/login'; // Redirect to the server-side SSO login route
   }, []);
 
   return <div>Redirecting...</div>;
-}
-
+};
 export default App;
