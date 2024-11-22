@@ -146,12 +146,10 @@ app.post('/login/callback', passport.authenticate('saml', {
 const options = {
     key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
     cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
-    ca: [
-        fs.readFileSync('./backend/2024_InCommonCA.crt')
-    ]
+    ca: fs.readFileSync('./backend/2024_InCommonCA.crt'),
 };
 
-// Create HTTPS server on port 3000
+// Create HTTPS server on port 3001
 https.createServer(options, app).listen(3001, () => {
     console.log('HTTPS Server running on port 3001');
 });
