@@ -8,7 +8,6 @@ const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
-const metadata = require('passport-saml-metadata');
 
 const app = express();
 
@@ -80,19 +79,8 @@ passport.deserializeUser((user, done) => {
 
 // Route to serve SP metadata
 app.get('/metadata', (req, res) => {
-    const decryptionCert = fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8');
-    const signingCert = fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8');
-
-    const metadata = {
-        callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
-        issuer: 'https://facelect.capping.ecrl.marist.edu',
-        cert: signingCert,
-        decryptionPvk: decryptionCert,
-    };
-
-    const xml = metadata.generate(metadata);
     res.type('application/xml');
-    res.send(xml);
+    res.status(200).send(samlStrategy.generateServiceProviderMetadata(fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8')));
 });
 
 // Route to handle admin login
