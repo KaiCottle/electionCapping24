@@ -14,7 +14,6 @@ const app = express();
 // List of allowed origins
 const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
-    'wss://facelect.capping.ecrl.marist.edu'
 ];
 
 // Configure CORS to allow requests from your React app

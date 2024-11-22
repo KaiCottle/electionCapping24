@@ -22,6 +22,9 @@ function App() {
 
           {/* Route for the user profile page */}
           <Route path='/User-Profile' element={<UserProfile />} />
+
+          {/* Route for the SSO redirect */}
+          <Route path="/sso/login" element={<SSORedirect />} />
         </Routes>
       </Router>
     </AuthProvider>
@@ -40,5 +43,13 @@ const ProtectedAdminRoute = () => {
     )
   );
 };
+
+function SSORedirect() {
+  React.useEffect(() => {
+    window.location.href = '/sso/login'; // Redirect to the server-side SSO login route
+  }, []);
+
+  return <div>Redirecting...</div>;
+}
 
 export default App;
