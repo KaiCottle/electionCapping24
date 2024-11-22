@@ -8,12 +8,22 @@ const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
+const WebSocket = require('ws');
 
 const app = express();
 
 // List of allowed origins
 const allowedOrigins = [
+    'https://localhost:3001',
+    'https://localhost',
+    'https://10.11.29.103',
+    'https://facelect.capping.ecrl.marist.edu:3001',
     'https://facelect.capping.ecrl.marist.edu',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://10.11.29.103',
+    'https://facelect.capping.ecrl.marist.edu:3000',
+    'https://facelect.capping.ecrl.marist.edu/',
 ];
 
 // Configure CORS to allow requests from your React app
@@ -79,6 +89,7 @@ passport.deserializeUser((user, done) => {
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
+    console.log('Received admin login request'); // Log request received
     const { username, password } = req.body; // Capture username and password from request
 
     try {
@@ -129,27 +140,61 @@ app.get('/faculty', async (req, res) => {
 });
 
 // SSO login route
-app.get('/sso/login', passport.authenticate('saml', {
-    successRedirect: '/user-profile',
-    failureRedirect: '/login'
-}));
+app.get('/login', (req, res, next) => {
+    console.log('SSO Login Initiated');
+    passport.authenticate('saml')(req, res, next);
+});
 
 // SSO callback route
-app.post('/login/callback', passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-}), (req, res) => {
-    res.redirect('/user-profile');
-});
+app.post('/login/callback', 
+    passport.authenticate('saml', {
+        failureRedirect: '/login',
+        failureFlash: true
+    }), 
+    (req, res) => {
+        console.log('SSO Callback - User Authenticated:', req.user);
+        res.redirect('/user-profile');
+    }
+);
 
 // Read SSL certificate and key
 const options = {
     key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
     cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
-    ca: fs.readFileSync('./backend/2024_InCommonCA.crt'),
+    ca: [
+        fs.readFileSync('./backend/2024_InCommonCA.crt')
+    ]
 };
 
-// Create HTTPS server on port 3001
-https.createServer(options, app).listen(3001, () => {
+const httpsServer = https.createServer(options, app);
+httpsServer.listen(3001, () => {
     console.log('HTTPS Server running on port 3001');
 });
+
+// Initialize WebSocket server on the HTTPS server
+const wss = new WebSocket.Server({ server: httpsServer, path: '/ws' });
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+    console.log('New WebSocket connection established');
+
+    ws.on('message', (message) => {
+        console.log(`Received message: ${message}`);
+        ws.send(`Server received: ${message}`);
+    });
+
+    ws.on('close', () => {
+        console.log('WebSocket connection closed');
+    });
+
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
+    });
+});
+
+// Start HTTP server on port 3002
+app.listen(3002, () => {
+    console.log('HTTP server is running on port 3002');
+});
+
+
