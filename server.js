@@ -131,12 +131,12 @@ app.get('/faculty', async (req, res) => {
 // SSO login route
 app.get('/sso/login', passport.authenticate('saml', {
     successRedirect: '/user-profile',
-    failureRedirect: '/'
+    failureRedirect: '/login'
 }));
 
 // SSO callback route
 app.post('/login/callback', passport.authenticate('saml', {
-    failureRedirect: '/',
+    failureRedirect: '/login',
     failureFlash: true
 }), (req, res) => {
     res.redirect('/user-profile');
