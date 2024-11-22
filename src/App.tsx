@@ -14,9 +14,6 @@ function App() {
           {/* Default route for the login page */}
           <Route path="/" element={<Login />} />
 
-          {/* Route for the SSO login page */}
-          <Route path="/login" element={<Login />} />
-
           {/* Route for the admin login page */}
           <Route path="/admin-login" element={<AdminLogin />} />
 
