@@ -75,7 +75,7 @@ To run this platform, your environment must meet the following prerequisites:
 ## Support
 
 - **If you encounter issues with the VM or SSO contact Marist IT and Services for help**: Email: HelpDesk@marist.edu, Phone: (845) 575-4357
-- For porject related issues, cllone the repo using: git clone https://github.com/KaiCottle/electionCapping24.git
+- For porject related issues, clone the repo using: git clone https://github.com/KaiCottle/electionCapping24.git
 
 ## Contributing
 
