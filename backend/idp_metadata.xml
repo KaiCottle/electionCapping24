@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" entityID="https://auth.it.marist.edu/idp">
+
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">marist.edu</shibmd:Scope>
+<!--
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">Marist.edu</mdui:DisplayName>
+                <mdui:Description xml:lang="en">Marist IdP for single sign on</mdui:Description>
+                <mdui:Logo height="80" width="80">https://www.marist.edu/images/logo.png</mdui:Logo>
+            </mdui:UIInfo>
+-->
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+MIIDZDCCAkygAwIBAgIEWUPr+jANBgkqhkiG9w0BAQsFADB0MQswCQYDVQQGEwJV
+UzELMAkGA1UECAwCTlkxFTATBgNVBAcMDFBvdWdoa2VlcHNpZTEXMBUGA1UECgwO
+TWFyaXN0IENvbGxlZ2UxCzAJBgNVBAsMAklUMRswGQYDVQQDDBJhdXRoLml0Lm1h
+cmlzdC5lZHUwHhcNMTcwNjE2MTQzNDIzWhcNMjcwNjE2MTQzNDIzWjB0MQswCQYD
+VQQGEwJVUzELMAkGA1UECAwCTlkxFTATBgNVBAcMDFBvdWdoa2VlcHNpZTEXMBUG
+A1UECgwOTWFyaXN0IENvbGxlZ2UxCzAJBgNVBAsMAklUMRswGQYDVQQDDBJhdXRo
+Lml0Lm1hcmlzdC5lZHUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDE
+43jyxC++dV0lYffBNFiMiSALRzZQIKRGGybuLobzyN7/ItAex9ABY36IKPQ7OPPt
+sKofjX4VLcVpehiDAUeQpLOUIOWiEJ3+QBR7WPqGRLW2Hen3utApH1a1+iA5nzqE
+uhpu0SMqC1g9Rt5m0ZGAuK+jT4KWfaEe18yphF8szpcVzwfAACr8cbYGSobMbOsz
+DgcQnXS+m1qorsn7fLZOa6R4pve/G9YZunFAJXBdmkHGo8Rmd6s/kIgQJZIksqkZ
+50gpDqzbIlKRYfHGroztjdGWcXkHUL7UXjUCNbQOvIvml4D8s2JtwgFRwkvo8BJ5
+KCKjJZQi9GZ3SRs4zyabAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAC+wiZCUiTlL
+MjNPACIe7f2wz5oit+HYRx3jTVTtWX8t+dWlEMK94LNysPuuU110qy0VeBIPgXXz
+Izka8yTOhxbBkQWG/5t7bAygOHhcyd6/XOv8pcwd1K+XMfu/BwLgyqk3pasERPu3
+hClNTmEyAkH1r09+k2TJpXqwA1UU6UGtHSqEwQz+FmNzCvEsyCI9i+cN4sVR9Lme
+ifZK7NdEDPu3jCiJgrZ0M6ltHkIf6yYm8xOv/6Ujcfvktofqe7oaqLYwAU1gQ2bC
+DkFRqL4im1iI7aKFrOoW9f5NF4Fx4aa9KidDmoSUOUSf42K4qGPZdvGpeRCxz/9q
+0HSCaQodCfM=
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+MIIDXzCCAkcCBFlD7pQwDQYJKoZIhvcNAQELBQAwdDELMAkGA1UEBhMCVVMxCzAJ
+BgNVBAgMAk5ZMRUwEwYDVQQHDAxQb3VnaGtlZXBzaWUxFzAVBgNVBAoMDk1hcmlz
+dCBDb2xsZWdlMQswCQYDVQQLDAJJVDEbMBkGA1UEAwwSYXV0aC5pdC5tYXJpc3Qu
+ZWR1MB4XDTE3MDYxNjE0NDQxNloXDTM3MDYxNjE0NDQxNlowdDELMAkGA1UEBhMC
+VVMxCzAJBgNVBAgMAk5ZMRUwEwYDVQQHDAxQb3VnaGtlZXBzaWUxFzAVBgNVBAoM
+Dk1hcmlzdCBDb2xsZWdlMQswCQYDVQQLDAJJVDEbMBkGA1UEAwwSYXV0aC5pdC5t
+YXJpc3QuZWR1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJ2+w3qC
+xfsGp6w1tGj2cGmgrOV4AbUXxSkjtxiN4uM2KlvJPHly8TXVlA/qJ7vB6CmWGAyy
+IEc6OS0NUE/sbU3MM8qRaBgvfarZCmClr0xIl0eLaDBdL9Srbyz56SyReQlvvnvR
+CaHkdngVTOsxkf62G9jDPWRqhvLcVlZs0MqB57KqOeK+N4GK0pUnLudJI3bVYND8
+G8SZKZ6a0VNvVOw57puzBvrRsUsBLhmLw2zeC/8cNN82Yzhgl60b+U6N/9oK4Rfl
+5nFu5yzfotgdK4p1FOJRduX1+2kueL2piqy2WpD9HmRGxVsgYnfVDheyHIvttdz6
+/ZG7Jrrie4ehzwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCHwNrdDPI+r2PWjA5R
+GXNsBTAsEOmA8+lFGQjp4YkCXudmn/FHWT5uBcw+lLKOM6KS8TrDRAWr6UYAKNVU
+SbgAPcY1rR0uCQ8fAvLvM6t5igUZLE1FwzNeLSV6ea5A7e828w5DQSQdoEY79SDG
+TIjzs0V8I+r3AZI9EstmaO345HVU3kHFFVuBTNP5yHzzeXlqrPaCgOnsAWZsd2VV
+tu3y3PgBWSJU1+1XnedtikbmqrQw2VzR0LUSq3CO1Eh5y82YHPVFL5Y6T15I5oyR
+IlEf+60ae5V8mYuV4eXaYIImm3/IbYNchlMgPOOI30YYwGFLHqYS8BX/Ga0YoEOk
+1R/Q
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://auth.it.marist.edu:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.it.marist.edu:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+
+        <!--
+                     <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.it.marist.edu/idp/profile/SAML2/POST/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://auth.it.marist.edu/idp/profile/SAML2/POST-SimpleSign/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.it.marist.edu:8443/idp/profile/SAML2/SOAP/SLO"/>
+        -->
+
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://auth.it.marist.edu/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.it.marist.edu/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://auth.it.marist.edu/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO"/>
+
+    </IDPSSODescriptor>
+
+
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">marist.edu</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+MIIDZDCCAkygAwIBAgIEWUPr+jANBgkqhkiG9w0BAQsFADB0MQswCQYDVQQGEwJV
+UzELMAkGA1UECAwCTlkxFTATBgNVBAcMDFBvdWdoa2VlcHNpZTEXMBUGA1UECgwO
+TWFyaXN0IENvbGxlZ2UxCzAJBgNVBAsMAklUMRswGQYDVQQDDBJhdXRoLml0Lm1h
+cmlzdC5lZHUwHhcNMTcwNjE2MTQzNDIzWhcNMjcwNjE2MTQzNDIzWjB0MQswCQYD
+VQQGEwJVUzELMAkGA1UECAwCTlkxFTATBgNVBAcMDFBvdWdoa2VlcHNpZTEXMBUG
+A1UECgwOTWFyaXN0IENvbGxlZ2UxCzAJBgNVBAsMAklUMRswGQYDVQQDDBJhdXRo
+Lml0Lm1hcmlzdC5lZHUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDE
+43jyxC++dV0lYffBNFiMiSALRzZQIKRGGybuLobzyN7/ItAex9ABY36IKPQ7OPPt
+sKofjX4VLcVpehiDAUeQpLOUIOWiEJ3+QBR7WPqGRLW2Hen3utApH1a1+iA5nzqE
+uhpu0SMqC1g9Rt5m0ZGAuK+jT4KWfaEe18yphF8szpcVzwfAACr8cbYGSobMbOsz
+DgcQnXS+m1qorsn7fLZOa6R4pve/G9YZunFAJXBdmkHGo8Rmd6s/kIgQJZIksqkZ
+50gpDqzbIlKRYfHGroztjdGWcXkHUL7UXjUCNbQOvIvml4D8s2JtwgFRwkvo8BJ5
+KCKjJZQi9GZ3SRs4zyabAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAC+wiZCUiTlL
+MjNPACIe7f2wz5oit+HYRx3jTVTtWX8t+dWlEMK94LNysPuuU110qy0VeBIPgXXz
+Izka8yTOhxbBkQWG/5t7bAygOHhcyd6/XOv8pcwd1K+XMfu/BwLgyqk3pasERPu3
+hClNTmEyAkH1r09+k2TJpXqwA1UU6UGtHSqEwQz+FmNzCvEsyCI9i+cN4sVR9Lme
+ifZK7NdEDPu3jCiJgrZ0M6ltHkIf6yYm8xOv/6Ujcfvktofqe7oaqLYwAU1gQ2bC
+DkFRqL4im1iI7aKFrOoW9f5NF4Fx4aa9KidDmoSUOUSf42K4qGPZdvGpeRCxz/9q
+0HSCaQodCfM=
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+MIIDXzCCAkcCBFlD7pQwDQYJKoZIhvcNAQELBQAwdDELMAkGA1UEBhMCVVMxCzAJ
+BgNVBAgMAk5ZMRUwEwYDVQQHDAxQb3VnaGtlZXBzaWUxFzAVBgNVBAoMDk1hcmlz
+dCBDb2xsZWdlMQswCQYDVQQLDAJJVDEbMBkGA1UEAwwSYXV0aC5pdC5tYXJpc3Qu
+ZWR1MB4XDTE3MDYxNjE0NDQxNloXDTM3MDYxNjE0NDQxNlowdDELMAkGA1UEBhMC
+VVMxCzAJBgNVBAgMAk5ZMRUwEwYDVQQHDAxQb3VnaGtlZXBzaWUxFzAVBgNVBAoM
+Dk1hcmlzdCBDb2xsZWdlMQswCQYDVQQLDAJJVDEbMBkGA1UEAwwSYXV0aC5pdC5t
+YXJpc3QuZWR1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJ2+w3qC
+xfsGp6w1tGj2cGmgrOV4AbUXxSkjtxiN4uM2KlvJPHly8TXVlA/qJ7vB6CmWGAyy
+IEc6OS0NUE/sbU3MM8qRaBgvfarZCmClr0xIl0eLaDBdL9Srbyz56SyReQlvvnvR
+CaHkdngVTOsxkf62G9jDPWRqhvLcVlZs0MqB57KqOeK+N4GK0pUnLudJI3bVYND8
+G8SZKZ6a0VNvVOw57puzBvrRsUsBLhmLw2zeC/8cNN82Yzhgl60b+U6N/9oK4Rfl
+5nFu5yzfotgdK4p1FOJRduX1+2kueL2piqy2WpD9HmRGxVsgYnfVDheyHIvttdz6
+/ZG7Jrrie4ehzwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCHwNrdDPI+r2PWjA5R
+GXNsBTAsEOmA8+lFGQjp4YkCXudmn/FHWT5uBcw+lLKOM6KS8TrDRAWr6UYAKNVU
+SbgAPcY1rR0uCQ8fAvLvM6t5igUZLE1FwzNeLSV6ea5A7e828w5DQSQdoEY79SDG
+TIjzs0V8I+r3AZI9EstmaO345HVU3kHFFVuBTNP5yHzzeXlqrPaCgOnsAWZsd2VV
+tu3y3PgBWSJU1+1XnedtikbmqrQw2VzR0LUSq3CO1Eh5y82YHPVFL5Y6T15I5oyR
+IlEf+60ae5V8mYuV4eXaYIImm3/IbYNchlMgPOOI30YYwGFLHqYS8BX/Ga0YoEOk
+1R/Q
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://auth.it.marist.edu:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        <!-- <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.it.marist.edu:8443/idp/profile/SAML2/SOAP/AttributeQuery"/> -->
+        <!-- If you uncomment the above you should add urn:oasis:names:tc:SAML:2.0:protocol to the protocolSupportEnumeration above -->
+
+    </AttributeAuthorityDescriptor>
+
+</EntityDescriptor>
