@@ -87,7 +87,7 @@ const App: React.FC = () => {
   
 
   useEffect(() => {
-    fetch('https://facelect.capping.ecrl.marist.edu/faculty')
+    fetch('https://facelect.capping.ecrl.marist.edu:3001/faculty')
       .then(response => response.json())
       .then(data => setRowData(data))
       .catch(error => console.error('Error fetching data:', error));

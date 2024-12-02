@@ -11,4 +11,15 @@
     width: 100vw; 
     z-index: 3;
     color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+.navbar-logo img {
+    height: 65px; /* Adjusted size for better alignment */
+    cursor: pointer;
 }
