@@ -22,6 +22,9 @@ function App() {
 
           {/* Route for the user profile page */}
           <Route path='/User-Profile' element={<UserProfile />} />
+
+          {/* Route for the SSO login page */}
+          <Route path="/sso/login" element={<div>Redirecting to SSO login...</div>} />
         </Routes>
       </Router>
     </AuthProvider>
