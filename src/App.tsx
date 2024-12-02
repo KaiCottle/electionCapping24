@@ -22,8 +22,6 @@ function App() {
 
           {/* Route for the user profile page */}
           <Route path='/User-Profile' element={<UserProfile />} />
-
-       
         </Routes>
       </Router>
     </AuthProvider>
