@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './Login';  // Login component
 import AdminLogin from './AdminLogin'; // Admin login component
 import AdminView from './AdminView'; // Admin view component
-import UserProfile from './UserProfile'; // User profile component
+import UserProfile from './UserProfile'; // User profile component 
 import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
 
 function App() {
@@ -23,8 +23,7 @@ function App() {
           {/* Route for the user profile page */}
           <Route path='/User-Profile' element={<UserProfile />} />
 
-          {/* Route for the SSO redirect */}
-          <Route path="/sso/login" element={<SSORedirect />} />
+       
         </Routes>
       </Router>
     </AuthProvider>
@@ -44,11 +43,5 @@ const ProtectedAdminRoute = () => {
   );
 };
 
-const SSORedirect: React.FC = () => {
-  React.useEffect(() => {
-    window.location.href = '/sso/login'; // Redirect to the server-side SSO login route
-  }, []);
 
-  return <div>Redirecting...</div>;
-};
 export default App;
