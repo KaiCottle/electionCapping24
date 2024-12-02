@@ -47,10 +47,10 @@ To run this platform, your environment must meet the following prerequisites:
 
 ## VM Environment Details
 
-- **IP Address**: `10.11.29.103`
+- **IP Address**: `10.11.29.95`
 - **Operating System**: Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-48-generic x86_64)
 - **Login Credentials**:
-  - **Username**: `root`
+  - **Username**: `root@10.11.29.95`
   - **Password**: `MaristDev2024!`
 - **SSH Command**:
   ```bash
