@@ -40,6 +40,10 @@ create table Faculty (
 primary key (FID)
 );
 
+-- Add the new column 'token' to the Faculty table
+alter table Faculty
+add token text;
+
 create table Committees (
 	CID   serial not null,
 	Cname text not null,

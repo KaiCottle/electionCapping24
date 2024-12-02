@@ -113,6 +113,45 @@ app.post('/admin-login', async (req, res) => {
     }
 });
 
+// Route to update a faculty member's profile
+app.post('/update-profile', async (req, res) => {
+    const { token, committee, school, preferredName, serviceStatement } = req.body;
+
+    try {
+        // Find the faculty member by token
+        const facultyResult = await client.query('SELECT FID FROM Faculty WHERE token = $1', [token]);
+
+        if (facultyResult.rows.length === 0) {
+            return res.status(400).json({ message: 'Invalid token' });
+        }
+
+        const facultyId = facultyResult.rows[0].fid;
+
+        // Update the faculty member's preferred name and service statement
+        await client.query(
+            'UPDATE Faculty SET PrefName = $1, TheStatement = $2 WHERE FID = $3',
+            [preferredName, serviceStatement, facultyId]
+        );
+
+        // Update the faculty member's school
+        await client.query(
+            'UPDATE Faculty SET SchoolID = (SELECT SID FROM Schools WHERE Sname = $1) WHERE FID = $2',
+            [school, facultyId]
+        );
+
+        // Insert new committee assignment without deleting old ones
+        await client.query(
+            'INSERT INTO CommitteeAssignments (FID, CID) VALUES ($1, (SELECT CID FROM Committees WHERE Cname = $2))',
+            [facultyId, committee]
+        );
+
+        res.json({ message: 'Profile updated successfully' });
+    } catch (err) {
+        console.error('Error updating profile:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Example existing route for fetching faculty data (unchanged)
 app.get('/faculty', async (req, res) => {
     try {
