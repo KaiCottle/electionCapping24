@@ -52,7 +52,7 @@ const hashPassword = (password) => {
 };
 
 // Passport SAML strategy configuration
-const samlStrategy = new SamlStrategy(
+passport.use(new SamlStrategy(
     {
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
@@ -66,10 +66,8 @@ const samlStrategy = new SamlStrategy(
         }
         return done(null, user);
       });
-    }
+    })
 );
-
-passport.use(samlStrategy);
 
 passport.serializeUser((user, done) => {
     done(null, user);
