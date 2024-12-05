@@ -24,6 +24,8 @@ function App() {
           {/* Route for the user profile page */}
           <Route path='/User-Profile' element={<UserProfile />} />
 
+          {/* Route for the SSO login page */}
+          <Route path="/sso/login" element={<SsoLoginRedirect />} />
         </Routes>
       </Router>
     </AuthProvider>
@@ -43,6 +45,12 @@ const ProtectedAdminRoute = () => {
   );
 };
 
+const SsoLoginRedirect: React.FC = () => {
+  useEffect(() => {
+    window.location.href = 'https://facelect.capping.ecrl.marist.edu:3001/sso/login';
+  }, []);
 
+  return <div>Redirecting to SSO login...</div>;
+};
 
 export default App;
