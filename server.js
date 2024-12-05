@@ -19,6 +19,7 @@ const allowedOrigins = [
     'https://api-a1cc77df.duosecurity.com',
     'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
     '*',
+    'https://auth.it.marist.edu',
 ];
 
 app.use(cors());
@@ -53,17 +54,19 @@ passport.use(new SamlStrategy(
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      cert: fs.readFileSync('./backend/idp_metadata.xml', 'utf-8'),
+      cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     function(profile, done) {
-      findByEmail(profile.email, function(err, user) {
-        if (err) {
-          return done(err);
-        }
-        return done(null, user);
-      });
-    })
-);
+        console.log('SAML Profile:', profile);
+        findByEmail(profile.email, (err, user) => {
+            if (err) {
+                console.error('Error in SAML callback:', err);
+                return done(err);
+            }
+            return done(null, user);
+        });
+    }
+));
 
 passport.serializeUser((user, done) => {
     done(null, user);
