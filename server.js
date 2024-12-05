@@ -8,7 +8,6 @@ const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
-const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -135,7 +134,6 @@ app.get('/faculty', async (req, res) => {
 
 // SSO callback route
 app.post('/login/callback', 
-    bodyParser.urlencoded({ extended: false }),
     passport.authenticate('saml', {
     failureRedirect: '/login',
     failureFlash: true
