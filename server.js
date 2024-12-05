@@ -15,6 +15,7 @@ const app = express();
 const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
     'https://auth.it.marist.edu/idp',
+    'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
 ];
 
 // Configure CORS to allow requests from your React app
@@ -55,6 +56,8 @@ const hashPassword = (password) => {
 // Passport SAML strategy configuration
 passport.use(new SamlStrategy(
     {
+      // Explicitly define the Assertion Consumer Service URL
+      callbackUrl: 'http://facelect.capping.ecrl.marist.edu:3001/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
