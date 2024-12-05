@@ -22,7 +22,7 @@ function App() {
           <Route path="/admin-view" element={<ProtectedAdminRoute />} />
 
           {/* Route for the user profile page */}
-          <Route path='/User-Profile' element={<UserProfile />} />
+          <Route path='/user-profile' element={<UserProfile />} />
         </Routes>
       </Router>
     </AuthProvider>
