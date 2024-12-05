@@ -49,7 +49,7 @@ const hashPassword = (password) => {
 passport.use(new SamlStrategy(
     {
       // Explicitly define the Assertion Consumer Service URL
-      callbackUrl: 'http://facelect.capping.ecrl.marist.edu:3001/login/callback',
+      callbackUrl: 'http://facelect.capping.ecrl.marist.edu/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
