@@ -9,24 +9,8 @@ const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
 const bodyParser = require("body-parser");
-const winston = require('winston');
 
 const app = express();
-
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.printf(({ timestamp, level, message }) => {
-            return `${timestamp} [${level}]: ${message}`;
-        })
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' })
-    ]
-});
 
 // List of allowed origins
 const allowedOrigins = [
