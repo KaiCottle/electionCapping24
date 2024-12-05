@@ -16,6 +16,7 @@ const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
     'https://auth.it.marist.edu/idp',
     'https://api-a1cc77df.duosecurity.com',
+    '*',
 ];
 
 // Configure CORS to allow requests from your React app
