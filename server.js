@@ -47,18 +47,21 @@ const hashPassword = (password) => {
 // Passport SAML strategy configuration
 passport.use(new SamlStrategy(
     {
-      // callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
-      callbackUrl: 'http://facelect.capping.ecrl.marist.edu:3001/login/callback',
+      callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
+      // callbackUrl: 'http://facelect.capping.ecrl.marist.edu:3001/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      // add decryptionPvk back after new import
       decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     (profile, done) => {
-        return done(null, profile);
-        }
+        // Extract user information from the profile
+        const user = {
+            email: profile.emailAddress,
+        };
+        return done(null, user);
+    }
 ));
 
 passport.serializeUser((user, done) => {
@@ -84,6 +87,7 @@ app.get('/sso/login', passport.authenticate('saml', {
     successRedirect: '/user-profile',
     failureRedirect: '/login'
 }));
+
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
