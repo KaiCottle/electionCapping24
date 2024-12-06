@@ -91,7 +91,7 @@ app.get('/sso/login', passport.authenticate('saml', {
 
 // Route to serve SP metadata
 const metadata = samlStrategy.generateServiceProviderMetadata({
-    decryptionCert: spCert,
+    decryptionCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
     issuer: 'https://facelect.capping.ecrl.marist.edu',
     callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
 });
