@@ -48,7 +48,7 @@ var spCert = fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.cr
 var idpCert = fs.readFileSync('./backend/idp_cert.pem', 'utf-8');
 
 // Passport SAML strategy configuration
-passport.use(new SamlStrategy(
+const samlStrategy = new SamlStrategy(
     {
       // Explicitly define the Assertion Consumer Service URL
       callbackUrl: 'https://facelect.capping.ecrl.marist.edulogin/callback',
@@ -58,17 +58,10 @@ passport.use(new SamlStrategy(
       decryptionPvk: spKey,
       cert: idpCert,
     },
-    function(profile, done) {
-        console.log('SAML Profile:', profile);
-        findByEmail(profile.email, (err, user) => {
-            if (err) {
-                console.error('Error in SAML callback:', err);
-                return done(err);
-            }
-            return done(null, user);
-        });
-    }
-));
+    (profile, done) => {
+        return done(null, profile);
+        }
+);
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -78,7 +71,7 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-passport.use('saml', SamlStrategy);
+passport.use('saml', samlStrategy);
 
 // SSO callback route
 app.post('/login/callback',
@@ -97,17 +90,13 @@ app.get('/sso/login', passport.authenticate('saml', {
 }));
 
 // Route to serve SP metadata
-const metadata = SamlStrategy.generateServiceProviderMetadata({
+const metadata = samlStrategy.generateServiceProviderMetadata({
     decryptionCert: spCert,
     issuer: 'https://facelect.capping.ecrl.marist.edu',
     callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
 });
 
-app.get('/metadata', (req, res) => {
-    const decryptionCert = spCert;
-    res.type('application/xml');
-    res.send (metadata)
-});
+console.log(metadata);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
