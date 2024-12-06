@@ -56,16 +56,9 @@ passport.use(new SamlStrategy(
       decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
-    function(profile, done) {
-        console.log('SAML Profile:', profile);
-        findByEmail(profile.email, (err, user) => {
-            if (err) {
-                console.error('Error in SAML callback:', err);
-                return done(err);
-            }
-            return done(null, user);
-        });
-    }
+    (profile, done) => {
+        return done(null, profile);
+        }
 ));
 
 passport.serializeUser((user, done) => {
