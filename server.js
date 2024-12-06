@@ -53,7 +53,7 @@ passport.use(new SamlStrategy(
       issuer: 'https://facelect.capping.ecrl.marist.edu',
       decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
-      cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      idpCert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     (profile, done) => {
         // Extract user information from the profile
