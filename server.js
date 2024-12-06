@@ -51,11 +51,13 @@ var rootCert = fs.readFileSync('./backend/2024_InCommonCA.crt', 'utf-8');
 // Passport SAML strategy configuration
 const samlStrategy = new SamlStrategy(
     {
+      // remove :3001 from callbackUrl after new import
       callbackUrl: 'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
+      // add decryptionPvk back after new import
+      // decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     (profile, done) => {
