@@ -25,7 +25,8 @@ app.use(express.json()); // Parse incoming JSON data
 
 // Configure session middleware
 app.use(session({
-    secret: 'Faculty%Defeat$248902', // Replace with a strong secret key
+    // secret: 'Faculty%Defeat$248902',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
@@ -42,11 +43,6 @@ connectDB();
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
 };
-
-var spKey = fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8');
-var spCert = fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8');
-var idpCert = fs.readFileSync('./backend/idp_cert.pem', 'utf-8');
-var rootCert = fs.readFileSync('./backend/2024_InCommonCA.crt', 'utf-8');
 
 // Passport SAML strategy configuration
 passport.use(new SamlStrategy(
