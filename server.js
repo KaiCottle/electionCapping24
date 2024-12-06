@@ -55,8 +55,8 @@ const samlStrategy = new SamlStrategy(
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      decryptionPvk: spKey,
-      cert: idpCert,
+      decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
+      cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     (profile, done) => {
         return done(null, profile);
@@ -91,7 +91,7 @@ app.get('/sso/login', passport.authenticate('saml', {
 
 // Route to serve SP metadata
 const metadata = samlStrategy.generateServiceProviderMetadata({
-    decryptionCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8'),
+    decryptionCert: '-----BEGIN CERTIFICATE-----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-----END CERTIFICATE-----',
     issuer: 'https://facelect.capping.ecrl.marist.edu',
     callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
 });
