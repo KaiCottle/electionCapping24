@@ -51,7 +51,8 @@ passport.use(new SamlStrategy(
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
+      decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
+      privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
     (profile, done) => {
