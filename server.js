@@ -6,7 +6,7 @@ const { client, connectDB } = require('./db/connection'); // Import the client a
 const https = require('https');
 const fs = require('fs');
 const passport = require('passport');
-const SamlStrategy = require('passport-saml').Strategy;
+const SamlStrategy = require('@node-saml/passport-saml').Strategy;
 const session = require('express-session');
 const bodyParser = require("body-parser");
 
