@@ -95,7 +95,7 @@ app.get('/sso/login', passport.authenticate('saml', {
 }));
 
 // Route to serve SP metadata
-const metadata = SamlStrategy.samlgenerateServiceProviderMetadata({
+const metadata = SamlStrategy.generateServiceProviderMetadata({
     cert: spCert,
     key: spKey,
     issuer: 'https://facelect.capping.ecrl.marist.edu',
