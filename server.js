@@ -54,7 +54,8 @@ passport.use(new SamlStrategy(
       issuer: 'https://facelect.capping.ecrl.marist.edu',
       // add decryptionPvk back after new import
       // decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
-      cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      // cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      cert: fs.readFileSync('./backend/idp_metadata.xml', 'utf-8'),
     },
     function(profile, done) {
         console.log('SAML Profile:', profile);
