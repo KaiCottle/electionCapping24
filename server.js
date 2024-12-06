@@ -8,6 +8,7 @@ const fs = require('fs');
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
 const session = require('express-session');
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -80,7 +81,8 @@ passport.deserializeUser((user, done) => {
 passport.use('saml', SamlStrategy);
 
 // SSO callback route
-app.post('/login/callback', 
+app.post('/login/callback',
+    bodyParser.urlencoded({ extended: false }),
     passport.authenticate('saml', {
     failureRedirect: '/login',
     failureFlash: true
@@ -96,8 +98,7 @@ app.get('/sso/login', passport.authenticate('saml', {
 
 // Route to serve SP metadata
 const metadata = SamlStrategy.generateServiceProviderMetadata({
-    cert: spCert,
-    key: spKey,
+    decryptionCert: spCert,
     issuer: 'https://facelect.capping.ecrl.marist.edu',
     callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
 });
