@@ -91,7 +91,8 @@ app.get('/sso/login', passport.authenticate('saml', {
 
 // Log SP metadata
 const metadata = samlStrategy.generateServiceProviderMetadata(spCert);
-console.log(metadata);
+// uncomment below to log metadata
+//console.log(metadata);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
