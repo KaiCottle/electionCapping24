@@ -49,7 +49,7 @@ var idpCert = fs.readFileSync('./backend/idp_cert.pem', 'utf-8');
 var rootCert = fs.readFileSync('./backend/2024_InCommonCA.crt', 'utf-8');
 
 // Passport SAML strategy configuration
-const samlStrategy = new SamlStrategy(
+passport.use(new SamlStrategy(
     {
       // remove :3001 from callbackUrl after new import
       callbackUrl: 'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
@@ -60,10 +60,17 @@ const samlStrategy = new SamlStrategy(
       // decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
     },
-    (profile, done) => {
-        return done(null, profile);
-        }
-);
+    function(profile, done) {
+        console.log('SAML Profile:', profile);
+        findByEmail(profile.email, (err, user) => {
+            if (err) {
+                console.error('Error in SAML callback:', err);
+                return done(err);
+            }
+            return done(null, user);
+        });
+    }
+));
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -72,8 +79,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
     done(null, user);
 });
-
-passport.use('saml', samlStrategy);
 
 // SSO callback route
 app.post('/login/callback',
@@ -90,11 +95,6 @@ app.get('/sso/login', passport.authenticate('saml', {
     successRedirect: '/user-profile',
     failureRedirect: '/login'
 }));
-
-// Log SP metadata
-const metadata = samlStrategy.generateServiceProviderMetadata(spCert);
-// uncomment below to log metadata
-//console.log(metadata);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
