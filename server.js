@@ -51,8 +51,7 @@ var rootCert = fs.readFileSync('./backend/2024_InCommonCA.crt', 'utf-8');
 // Passport SAML strategy configuration
 const samlStrategy = new SamlStrategy(
     {
-      // Explicitly define the Assertion Consumer Service URL
-      callbackUrl: 'https://facelect.capping.ecrl.marist.edulogin/callback',
+      callbackUrl: 'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
