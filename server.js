@@ -78,6 +78,7 @@ app.post('/login/callback',
     failureRedirect: '/login',
     failureFlash: true
 }), (req, res) => {
+    console.log('SSO callback reached');
     res.redirect('/user-profile');
 });
 
