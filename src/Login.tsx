@@ -6,7 +6,7 @@ import Footer from './components/footer/footer';
 
 function handleSSOLogin() {
   console.log('going to the /login')
-  window.location.href = 'https://facelect.capping.ecrl.marist.edu/sso/login';
+  window.location.href = 'https://facelect.capping.ecrl.marist.edu:3001/sso/login';
 }
 
 
