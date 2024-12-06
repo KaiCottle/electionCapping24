@@ -14,10 +14,7 @@ const app = express();
 // List of allowed origins
 const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
-    'https://auth.it.marist.edu/idp',
     'https://api-a1cc77df.duosecurity.com',
-    'https://facelect.capping.ecrl.marist.edu:3001/login/callback',
-    '*',
     'https://auth.it.marist.edu',
 ];
 
@@ -27,7 +24,7 @@ app.use(express.json()); // Parse incoming JSON data
 
 // Configure session middleware
 app.use(session({
-    secret: 'your-secret-key', // Replace with a strong secret key
+    secret: 'Faculty%Defeat$248902', // Replace with a strong secret key
     resave: false,
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
@@ -45,15 +42,20 @@ const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
 };
 
+var spKey = fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key', 'utf-8');
+var spCert = fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8');
+var idpCert = fs.readFileSync('./backend/idp_cert.pem', 'utf-8');
+
 // Passport SAML strategy configuration
 passport.use(new SamlStrategy(
     {
       // Explicitly define the Assertion Consumer Service URL
-      callbackUrl: 'http://facelect.capping.ecrl.marist.edu:3001/login/callback',
+      callbackUrl: 'https://facelect.capping.ecrl.marist.edulogin/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      decryptionPvk: spKey,
+      cert: idpCert,
     },
     function(profile, done) {
         console.log('SAML Profile:', profile);
@@ -75,10 +77,35 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
+passport.use('saml', SamlStrategy);
+
+// SSO callback route
+app.post('/login/callback', 
+    passport.authenticate('saml', {
+    failureRedirect: '/login',
+    failureFlash: true
+}), (req, res) => {
+    res.redirect('/user-profile');
+});
+
+// SSO login route
+app.get('/sso/login', passport.authenticate('saml', {
+    successRedirect: '/user-profile',
+    failureRedirect: '/login'
+}));
+
 // Route to serve SP metadata
+const metadata = SamlStrategy.samlgenerateServiceProviderMetadata({
+    cert: spCert,
+    key: spKey,
+    issuer: 'https://facelect.capping.ecrl.marist.edu',
+    callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
+});
+
 app.get('/metadata', (req, res) => {
+    const decryptionCert = spCert;
     res.type('application/xml');
-    res.status(200).send(samlStrategy.generateServiceProviderMetadata(fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8')));
+    res.send (metadata)
 });
 
 // Route to handle admin login
@@ -131,21 +158,6 @@ app.get('/faculty', async (req, res) => {
         res.status(500).send('Error querying the database');
     }
 });
-
-// SSO callback route
-app.post('/login/callback', 
-    passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-}), (req, res) => {
-    res.redirect('/user-profile');
-});
-
-// SSO login route
-app.get('/sso/login', passport.authenticate('saml', {
-    successRedirect: '/user-profile',
-    failureRedirect: '/login'
-}));
 
 // Read SSL certificate and key
 const options = {
