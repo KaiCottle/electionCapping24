@@ -143,8 +143,8 @@ app.get('/faculty', async (req, res) => {
 
 // Read SSL certificate and key
 const options = {
-    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
-    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
+    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem'),
+    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem'),
     ca: fs.readFileSync('./backend/2024_InCommonCA.crt'),
 };
 
