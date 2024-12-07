@@ -9,6 +9,9 @@ const passport = require('passport');
 const SamlStrategy = require('@node-saml/passport-saml').Strategy;
 const session = require('express-session');
 const bodyParser = require("body-parser");
+const morgan = require('morgan'); 
+
+app.use(morgan('common')); // Log HTTP requests
 
 const app = express();
 
