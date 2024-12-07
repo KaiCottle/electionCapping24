@@ -45,6 +45,11 @@ app.use(passport.session());
 // Connect to the PostgreSQL database
 connectDB();
 
+// Redirect base URL to /login
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
+
 // Function to hash passwords using SHA-256
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
