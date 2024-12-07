@@ -160,7 +160,14 @@ const options = {
 //     console.log('HTTPS Server running on port 3001');
 // });
 
-// create http nad https server
-https.createServer(options, app).listen(httpsPort, () => {
+// create servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(options, app);
+
+// start servers
+httpServer.listen(httpPort, () => {
+    console.log(`HTTP Server running on port ${httpPort}`);
+});
+httpsServer.listen(httpsPort, () => {
     console.log(`HTTPS Server running on port ${httpsPort}`);
 });
