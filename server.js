@@ -77,7 +77,7 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-app.post(
+/* app.post(
   "/login/callback",
   bodyParser.urlencoded({ extended: false }),
   passport.authenticate("saml", {
@@ -87,7 +87,12 @@ app.post(
   function (req, res) {
     res.redirect("/user-profile");
   },
-);
+); */
+
+// simple callback route for testing
+app.post('/login/callback', (req, res) => {
+    res.redirect('/user-profile');
+});
 
 // SSO login route
 app.get('/sso/login', 
