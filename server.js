@@ -25,10 +25,11 @@ const allowedOrigins = [
 ];
 
 app.use(cors());
-
 app.use(express.json()); // Parse incoming JSON data
-
 app.use(morgan('common')); // Log HTTP requests
+
+// Connect to the PostgreSQL database
+connectDB();
 
 // Configure session middleware
 app.use(session({
@@ -41,19 +42,6 @@ app.use(session({
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Connect to the PostgreSQL database
-connectDB();
-
-// Redirect base URL to /login
-app.get('/', (req, res) => {
-    res.redirect('/login');
-});
-
-// Define the /login route
-app.get('/login', (req, res) => {
-    res.send('Login Page'); // Replace this with your actual login page rendering logic
-});
 
 // Function to hash passwords using SHA-256
 const hashPassword = (password) => {
@@ -107,6 +95,11 @@ app.get('/sso/login',
         res.redirect("/");
     },
 );
+
+// Login route
+app.get('/login', (req, res) => {
+    res.send('Login page');
+}
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {

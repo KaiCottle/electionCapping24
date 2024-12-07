@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Login.css';
 import backgroundImage from './assets/background.jpg';
 import logoImage from './assets/logo.png'
 import Footer from './components/footer/footer';
+
+useEffect(() => {
+  fetch('/login')
+})
 
 function handleSSOLogin() {
   console.log('going to the /login')

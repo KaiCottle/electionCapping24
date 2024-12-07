@@ -1,6 +1,8 @@
 {
   "name": "election-capping",
   "version": "0.1.0",
+  "main": "server.js",
+  "proxy": "https://facelect.capping.ecrl.marist.edu:8443"
   "private": true,
   "dependencies": {
     "@node-saml/passport-saml": "^5.0.0",
