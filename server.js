@@ -76,7 +76,7 @@ passport.deserializeUser((user, done) => {
 
 // SSO callback route
 app.post(
-  'https://facelect.capping.ecrl.marist.edu/login/callback',
+  '/login/callback',
   bodyParser.urlencoded({ extended: false }),
   passport.authenticate("saml", {
     failureRedirect: "/",
