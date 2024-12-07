@@ -11,7 +11,6 @@ const session = require('express-session');
 const bodyParser = require("body-parser");
 const morgan = require('morgan'); 
 
-app.use(morgan('common')); // Log HTTP requests
 
 const app = express();
 
@@ -25,6 +24,8 @@ const allowedOrigins = [
 app.use(cors());
 
 app.use(express.json()); // Parse incoming JSON data
+
+app.use(morgan('common')); // Log HTTP requests
 
 // Configure session middleware
 app.use(session({
