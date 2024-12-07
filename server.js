@@ -50,6 +50,11 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
+// Define the /login route
+app.get('/login', (req, res) => {
+    res.send('Login Page'); // Replace this with your actual login page rendering logic
+});
+
 // Function to hash passwords using SHA-256
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
