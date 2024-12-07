@@ -4,10 +4,6 @@ import backgroundImage from './assets/background.jpg';
 import logoImage from './assets/logo.png'
 import Footer from './components/footer/footer';
 
-useEffect(() => {
-  fetch('/login')
-})
-
 function handleSSOLogin() {
   console.log('going to the /login')
   window.location.href = 'https://facelect.capping.ecrl.marist.edu/sso/login';
@@ -15,6 +11,11 @@ function handleSSOLogin() {
 
 
 function Login() {
+
+  useEffect(() => {
+    fetch('/login')
+  })
+
   return (
     <div className='m-login'>
       <img src={backgroundImage} className='bg-image' alt='Background' />
