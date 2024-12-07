@@ -83,6 +83,7 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
+    done(null, user);
     res.redirect("/user-profile");
   },
 );
