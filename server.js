@@ -51,7 +51,7 @@ const hashPassword = (password) => {
 // Passport SAML strategy configuration
 passport.use(new SamlStrategy(
     {
-      // callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
+      callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
       path: '/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
