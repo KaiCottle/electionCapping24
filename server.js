@@ -29,11 +29,10 @@ app.use(morgan('common')); // Log HTTP requests
 
 // Configure session middleware
 app.use(session({
-    // secret: 'Faculty%Defeat$248902',
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
+    // cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
 }));
 
 // Initialize Passport and restore authentication state, if any, from the session
