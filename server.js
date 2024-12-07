@@ -153,7 +153,7 @@ const options = {
     ca: fs.readFileSync('./backend/2024_InCommonCA.crt'),
 };
 
-// Create HTTPS server on port 3001
-https.createServer(options, app).listen(3001, () => {
-    console.log('HTTPS Server running on port 3001');
+// Create HTTPS server on port 3000
+https.createServer(options, app).listen(3000, () => {
+    console.log('HTTPS Server running on port 3000');
 });
