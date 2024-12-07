@@ -58,6 +58,8 @@ passport.use(new SamlStrategy(
       decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       idpCert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      wantAssertionsSigned: false,
+      wantAuthnResponseSigned: false
     },
     (profile, done) => {
         // Extract user information from the profile
