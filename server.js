@@ -11,6 +11,8 @@ const session = require('express-session');
 const bodyParser = require("body-parser");
 const morgan = require('morgan'); 
 
+const httpPort = 8080;
+const httpsPort = 8443;
 
 const app = express();
 
@@ -154,6 +156,11 @@ const options = {
 };
 
 // Create HTTPS server on port 3001
-https.createServer(options, app).listen(3001, () => {
-    console.log('HTTPS Server running on port 3001');
+// https.createServer(options, app).listen(3001, () => {
+//     console.log('HTTPS Server running on port 3001');
+// });
+
+// create http nad https server
+https.createServer(options, app).listen(httpsPort, () => {
+    console.log(`HTTPS Server running on port ${httpsPort}`);
 });
