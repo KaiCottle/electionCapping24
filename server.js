@@ -61,8 +61,7 @@ passport.use(new SamlStrategy(
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
       identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
       authnRequestBinding: 'HTTP-REDIRECT',
-      protocol: 'https://',
-      signatureAlgorithm: 'sha256',
+      // protocol: 'https://',
     },
     (profile, done) => {
         // Extract user information from the profile
