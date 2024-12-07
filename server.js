@@ -73,22 +73,27 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-app.post('/login/callback',
-    bodyParser.urlencoded({ extended: false }),
-    passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-}), (req, res) => {
-    console.log('SSO callback reached');
-    res.redirect('/user-profile');
-});
+const bodyParser = require("body-parser");
+
+app.post(
+  "/login/callback",
+  bodyParser.urlencoded({ extended: false }),
+  passport.authenticate("saml", {
+    failureRedirect: "/",
+    failureFlash: true,
+  }),
+  function (req, res) {
+    res.redirect("/user-profile");
+  },
+);
 
 // SSO login route
-app.get('/sso/login', passport.authenticate('saml', {
-    successRedirect: '/user-profile',
-    failureRedirect: '/login'
-}));
-
+app.get('/sso/login', 
+    passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
+    function (req, res) {
+        res.redirect("/");
+    },
+);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
