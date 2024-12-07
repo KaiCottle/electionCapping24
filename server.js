@@ -58,8 +58,8 @@ passport.use(new SamlStrategy(
       decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       idpCert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
-      wantAssertionsSigned: true,
-      wantAuthnResponseSigned: true,
+      authnContext: ['http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows'],
+      identifierFormat: null
     },
     (profile, done) => {
         // Extract user information from the profile
@@ -79,7 +79,7 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-app.get(
+app.post(
   '/login/callback',
   bodyParser.urlencoded({ extended: false }),
   passport.authenticate("saml", {
