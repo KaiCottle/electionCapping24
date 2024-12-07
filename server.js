@@ -59,8 +59,8 @@ passport.use(new SamlStrategy(
       privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
       idpCert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
       cert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
-      identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-      authnRequestBinding: 'HTTP-REDIRECT',
+      // identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+      // authnRequestBinding: 'HTTP-REDIRECT',
       // protocol: 'https://',
     },
     (profile, done) => {
