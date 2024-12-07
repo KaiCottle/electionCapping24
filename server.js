@@ -79,7 +79,7 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-app.post(
+app.get(
   '/login/callback',
   bodyParser.urlencoded({ extended: false }),
   passport.authenticate("saml", {
@@ -87,7 +87,7 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
-    res.redirect("/user-profile"); // Original redirection
+    res.redirect("/user-profile");
   },
 );
 
