@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const passport = require('passport');
