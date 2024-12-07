@@ -98,15 +98,6 @@ app.get('/sso/login',
     },
 );
 
-// user-profile route
-app.get('/user-profile', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json(req.user);
-    } else {
-        res.redirect('/login');
-    }
-});
-
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
