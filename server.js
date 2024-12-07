@@ -73,8 +73,6 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-const bodyParser = require("body-parser");
-
 app.post(
   "/login/callback",
   bodyParser.urlencoded({ extended: false }),
