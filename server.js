@@ -85,17 +85,9 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
-    res.redirect("/user-profile"); // Redirect to user-profile after successful login
+    res.redirect("/user-profile"); // Original redirection
   },
 );
-
-// Separate route for user profile
-app.get('/user-profile', (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-  res.send(`Hello ${req.user.email}, welcome to your profile!`);
-});
 
 // SSO login route
 app.get('/sso/login', 
