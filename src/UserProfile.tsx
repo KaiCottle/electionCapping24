@@ -84,7 +84,7 @@ const UserProfile: React.FC = () => {
           setPreferredName(data.preferredName);
           setSchool(data.school);
           setCommittees(data.committees);
-          setServiceStatement(data.theStatement);
+          setServiceStatement(data.serviceStatement);
           setError('');
         } else {
           setError('Email not found. Click "Edit Profile" to create a new profile.');
