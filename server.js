@@ -61,12 +61,10 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
+    function (profile, done) {
+        return done(null, {
+          email: profile.email,
+        });
     }
 ));
 
@@ -87,6 +85,9 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
+    // Access the authenticated user
+    console.log("req.user");
+    console.log(req.user);
     res.redirect("/user-profile");
   }
 );
