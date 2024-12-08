@@ -87,10 +87,6 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
-    console.log("raw assertion XML:", profile.getAssertionXml());
-    console.log('User found');
-    console.log(req.user);
-    console.log(user);
     res.redirect("/user-profile");
   }
 );
@@ -103,20 +99,7 @@ app.get('/sso/login',
     }
 );
 
-// Correct route handler with both req and res
-app.get('/committees', async (req, res) => {
-    try {
-      const result = await client.query('SELECT Cname FROM Committees');
-      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
-      res.json(result.rows);
-    } catch (err) {
-      console.error('Error fetching committees:', err);
-      res.status(500).json({ message: 'Server error' });
-    }
-  }
-);
-
-// Correct route handler with both req and res
+// Route to fetch committee names
 app.get('/committees', async (req, res) => {
     try {
       const result = await client.query('SELECT Cname FROM Committees');
