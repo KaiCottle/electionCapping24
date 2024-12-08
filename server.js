@@ -124,6 +124,19 @@ app.get('/committees', async (req, res) => {
   }
 );
 
+// Correct route handler with both req and res
+app.get('/committees', async (req, res) => {
+    try {
+      const result = await client.query('SELECT Cname FROM Committees');
+      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching committees:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
 // Route to fetch school names
 app.get('/schools', async (req, res) => {
     try {
