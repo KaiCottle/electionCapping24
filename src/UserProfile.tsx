@@ -8,6 +8,8 @@ import Select from 'react-select';
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false); // State to track if in edit mode
   const [preferredName, setPreferredName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
@@ -41,6 +43,22 @@ const UserProfile: React.FC = () => {
         {isEditing ? (
           // Edit State
           <form className="profile-form">
+            <div className="form-group">
+              <label>Enter your first name: </label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Your First Name Here"
+              />
+              <label>Enter your last name: </label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Your Last Name Here"
+              />
+            </div>
             <div className="form-group">
               <label>Enter your preferred name (how it will appear on the ballot)</label>
               <input
@@ -89,6 +107,8 @@ const UserProfile: React.FC = () => {
         ) : (
           // View State
           <div className="profile-view">
+            <p><strong>First Name:</strong> {firstName || 'Not Provided'}</p>
+            <p><strong>Last Name:</strong>{lastName || 'Not Provided'}</p>
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
             <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>
