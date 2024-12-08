@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';  // Login component
 import AdminLogin from './AdminLogin'; // Admin login component
 import AdminView from './AdminView'; // Admin view component
-import UserProfile from './UserProfile'; // User profile component
+import UserProfile from './UserProfile'; // User profile component 
 import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom';
+import UserLogin from './User-Login';
 
 function App() {
   return (
@@ -13,6 +15,9 @@ function App() {
         <Routes>
           {/* Default route for the login page */}
           <Route path="/" element={<Login />} />
+          
+          {/* Other route for the login page */}
+          <Route path="/Login" element={<Login />} />
 
           {/* Route for the admin login page */}
           <Route path="/admin-login" element={<AdminLogin />} />
@@ -21,7 +26,11 @@ function App() {
           <Route path="/admin-view" element={<ProtectedAdminRoute />} />
 
           {/* Route for the user profile page */}
-          <Route path='/User-Profile' element={<UserProfile />} />
+          <Route path='/user-profile' element={<UserProfile />} />
+
+	  {/* Route for the User Login */}
+          <Route path="/User-Login" element={<UserLogin />} />
+
         </Routes>
       </Router>
     </AuthProvider>
@@ -40,5 +49,6 @@ const ProtectedAdminRoute = () => {
     )
   );
 };
+
 
 export default App;
