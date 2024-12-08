@@ -89,7 +89,7 @@ app.post(
       // Access the authenticated user
       console.log("req.user");
       console.log(req.user);
-      res.redirect("/user-profile");
+      res.redirect("/user-profile"); // pass email here after quote , user.req.email
     }
   );
 
