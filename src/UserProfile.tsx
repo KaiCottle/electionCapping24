@@ -7,6 +7,8 @@ import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
@@ -77,7 +79,8 @@ const UserProfile: React.FC = () => {
       <Navbar />
       <h1 className='title'>Your Election Profile</h1>
       <div className="profile-form-container">
-        {isEditing ? (
+      {isEditing ? (
+          // Edit State
           <form className="profile-form">
             <div className="form-group">
               <label>Enter your first name: </label>
@@ -156,5 +159,4 @@ const UserProfile: React.FC = () => {
   );
 };
 
-export default UserProfile;
-            
+export default UserProfile;        
