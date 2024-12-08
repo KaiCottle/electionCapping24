@@ -32,6 +32,7 @@ h1 {
 .form-group {
     margin-bottom: 30px;
     width: 95%;
+    padding-top: 10px;
 }
 
 .form-group label {
@@ -97,6 +98,7 @@ select,
 .save-button {
     background-color: #b21e2d;
     border: 2px solid #fe6978;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     justify-content: flex-end;
@@ -208,7 +210,35 @@ select,
     color: red;
     margin-top: 10px;
   }
-  
+
+  .editing-header {
+    position: relative;
+    margin-bottom: 20px; /* Adds space between the header and the form content */
+}
+
+.go-back-button {
+    position: absolute; /* Places the button relative to the `editing-header` container */
+    top: -20px; /* Adjusts the button's position above the form content */
+    left: -10px; /* Adjusts the button's position to the left of the container padding */
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #b21e2d;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.go-back-button:hover {
+    color: #831b25;
+}
+
+.back-arrow {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
 
 
   
