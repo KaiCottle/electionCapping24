@@ -11,11 +11,6 @@ function handleSSOLogin() {
 
 
 function Login() {
-
-  useEffect(() => {
-    fetch('/login')
-  })
-
   return (
     <div className='m-login'>
       <img src={backgroundImage} className='bg-image' alt='Background' />
