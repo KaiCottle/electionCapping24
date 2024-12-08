@@ -141,7 +141,7 @@ app.post('/check-email', async (req, res) => {
         console.log('Querying Faculty table for email:', email);
         // Query the Faculty table for the given email
         const facultyResult = await client.query(
-            'SELECT fid, PrefName, TheStatement, SchoolID FROM Faculty WHERE Email = $1',
+            'SELECT fid, PrefName AS prefname, TheStatement AS thestatement, SchoolID AS schoolid FROM Faculty WHERE Email = $1',
             [email]
         );
 
