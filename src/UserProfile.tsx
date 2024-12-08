@@ -10,8 +10,6 @@ const UserProfile: React.FC = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
