@@ -61,13 +61,20 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
-    }
+    function (req, profile, done) {
+        // for signon
+        findByEmail(profile.emailAddress, function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                return done(new Error('User not found'));
+            }
+            return done(null, user);
+            console.log('User found');
+            console.log(user);
+        });
+    },
 ));
 
 passport.serializeUser((user, done) => {
@@ -77,6 +84,31 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
     done(null, user);
 });
+
+// Correct route handler with both req and res
+app.get('/committees', async (req, res) => {
+    try {
+      const result = await client.query('SELECT Cname FROM Committees');
+      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching committees:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// Route to fetch school names
+app.get('/schools', async (req, res) => {
+    try {
+        const result = await client.query('SELECT Sname FROM Schools');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching schools:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
 
 // SSO callback route
 app.post(
@@ -97,6 +129,19 @@ app.get('/sso/login',
     function (req, res) {
         res.redirect("/");
     }
+);
+
+// Correct route handler with both req and res
+app.get('/committees', async (req, res) => {
+    try {
+      const result = await client.query('SELECT Cname FROM Committees');
+      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching committees:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
 );
 
 // Route to handle admin login
