@@ -25,6 +25,7 @@ const allowedOrigins = [
     'https://auth.it.marist.edu',
 ];
 
+app.use(bodyParser());
 app.use(cors());
 app.use(express.json()); // Parse incoming JSON data
 app.use(morgan('common')); // Log HTTP requests
@@ -61,14 +62,13 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
-    }
-));
+    function (profile, done) {
+        return done(null, {
+          email: profile.emailAddress,
+        });
+      }
+    )
+  );
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -80,15 +80,14 @@ passport.deserializeUser((user, done) => {
 
 // SSO callback route
 app.post('/login/callback',
-    bodyParser.urlencoded({ extended: false }),
     passport.authenticate("saml", {
       failureRedirect: "/",
       failureFlash: true,
     }),
     function (req, res) {
       // Access the authenticated user
-      const user = req.user;
-      console.log('Authenticated user:', user);
+      console.log("req.user");
+      console.log(req.user);
       res.redirect("/user-profile");
     }
   );
