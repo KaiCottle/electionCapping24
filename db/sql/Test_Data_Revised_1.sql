@@ -317,8 +317,8 @@ INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement
 	 'I will be happy to serve on any committee if elected.', 
 	 '2024-04-23 13:01:23');
 
-INSERT INTO Admins (aid, uname, thepassword, godmode) VALUES
-	(1, 'admin1', 'cd6357efdd966de8c0cb2f876cc89ec74ce35f0968e11743987084bd42fb8944', TRUE)
+INSERT INTO Admins (aid, uname, thepassword, godmode) 
+VALUES (1, 'admin1', 'cd6357efdd966de8c0cb2f876cc89ec74ce35f0968e11743987084bd42fb8944', TRUE);
 
 -- Our own test data, comment this out when deploying
 INSERT INTO People (Fname, Lname)
