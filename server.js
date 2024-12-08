@@ -152,41 +152,188 @@ app.post('/admin-login', async (req, res) => {
     }
 });
 
-// Route to update a faculty member's profile
-app.post('/update-profile', async (req, res) => {
-    const { token, committee, school, preferredName, serviceStatement } = req.body;
+// Route to get current user's email
+app.get('/current-user', ensureAuthenticated, (req, res) => {
+    try {
+      res.json({ email: req.user.email });
+    } catch (err) {
+      console.error('Error fetching current user:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // New route to fetch faculty by email
+  app.get('/faculty-by-email', async (req, res) => {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ message: 'Email query parameter is required' });
+    }
+  
+    try {
+      const result = await client.query('SELECT * FROM Faculty WHERE Email = $1', [email]);
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching faculty by email:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+// Route to update user profile
+app.post('/update-user-profile', ensureAuthenticated, async (req, res) => {
+    const email = req.user.email; // Retrieve email from authenticated user
+    const { firstName, lastName, preferredName, school, committees, serviceStatement } = req.body;
 
     try {
-        // Find the faculty member by token
-        const facultyResult = await client.query('SELECT FID FROM Faculty WHERE token = $1', [token]);
+        await client.query('BEGIN');
+
+        // Retrieve FID from Faculty using Email
+        const facultyResult = await client.query(
+            'SELECT FID FROM Faculty WHERE Email = $1',
+            [email]
+        );
 
         if (facultyResult.rows.length === 0) {
-            return res.status(400).json({ message: 'Invalid token' });
+            throw new Error('Faculty member not found');
         }
 
-        const facultyId = facultyResult.rows[0].fid;
+        const fid = facultyResult.rows[0].fid;
 
-        // Update the faculty member's preferred name and service statement
-        await client.query(
-            'UPDATE Faculty SET PrefName = $1, TheStatement = $2 WHERE FID = $3',
-            [preferredName, serviceStatement, facultyId]
+        // Retrieve SID from Schools using school name
+        const schoolResult = await client.query(
+            'SELECT sid FROM Schools WHERE sname = $1',
+            [school]
         );
 
-        // Update the faculty member's school
+        if (schoolResult.rows.length === 0) {
+            throw new Error('School not found');
+        }
+
+        const sid = schoolResult.rows[0].sid;
+
+        // Update People table with firstName and lastName
         await client.query(
-            'UPDATE Faculty SET SchoolID = (SELECT SID FROM Schools WHERE Sname = $1) WHERE FID = $2',
-            [school, facultyId]
+            `UPDATE People
+             SET Fname = $1, Lname = $2
+             WHERE PID = $3`,
+            [firstName, lastName, fid]
         );
 
-        // Insert new committee assignment without deleting old ones
+        // Update Faculty table with other profile details and set lastUpdated to current timestamp
         await client.query(
-            'INSERT INTO CommitteeAssignments (FID, CID) VALUES ($1, (SELECT CID FROM Committees WHERE Cname = $2))',
-            [facultyId, committee]
+            `UPDATE Faculty
+             SET PrefName = $1, SchoolID = $2, ServiceStatement = $3, LastUpdated = NOW()
+             WHERE FID = $4`,
+            [preferredName, sid, serviceStatement, fid]
         );
 
+        // Assign Committees
+        if (Array.isArray(committees) && committees.length > 0) {
+            for (const committeeName of committees) {
+                // Retrieve CID from Committees table
+                const committeeResult = await client.query(
+                    'SELECT CID FROM Committees WHERE Cname = $1',
+                    [committeeName]
+                );
+
+                if (committeeResult.rows.length === 0) {
+                    throw new Error(`Committee not found: ${committeeName}`);
+                }
+
+                const cid = committeeResult.rows[0].cid;
+
+                // Insert into CommitteeAssignments table without deleting existing assignments
+                await client.query(
+                    `INSERT INTO CommitteeAssignments (FID, CID)
+                     VALUES ($1, $2)
+                     ON CONFLICT (FID, CID) DO NOTHING`,
+                    [fid, cid]
+                );
+            }
+        }
+
+        await client.query('COMMIT');
         res.json({ message: 'Profile updated successfully' });
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error('Error updating profile:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Route to create user profile
+app.post('/create-user-profile', ensureAuthenticated, async (req, res) => {
+    const email = req.user.email; // Retrieve email from authenticated user
+    const { firstName, lastName, preferredName, school, committees, serviceStatement } = req.body;
+
+    try {
+        await client.query('BEGIN');
+
+        // Insert into People table
+        const insertPeopleResult = await client.query(
+            `INSERT INTO People (Fname, Lname)
+             VALUES ($1, $2)
+             RETURNING PID`,
+            [firstName, lastName]
+        );
+
+        const pid = insertPeopleResult.rows[0].pid;
+
+        // Retrieve SID from Schools using school name
+        const schoolResult = await client.query(
+            'SELECT sid, sname FROM Schools WHERE sname = $1',
+            [school]
+        );
+
+        if (schoolResult.rows.length === 0) {
+            throw new Error('School not found');
+        }
+
+        const sid = schoolResult.rows[0].sid;
+        const schoolName = schoolResult.rows[0].sname;
+
+        // Hyphenate school name and names for URL
+        const hyphenatedSchool = schoolName.toLowerCase().replace(/\s+/g, '-');
+        const hyphenatedFirstName = firstName.toLowerCase().replace(/\s+/g, '-');
+        const hyphenatedLastName = lastName.toLowerCase().replace(/\s+/g, '-');
+        const url = `https://www.marist.edu/${hyphenatedSchool}/faculty/${hyphenatedFirstName}-${hyphenatedLastName}`;
+
+        // Insert into Faculty table without Committees
+        await client.query(
+            `INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement, LastUpdated)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+            [pid, email, sid, false, preferredName, url, serviceStatement]
+        );
+
+        // Assign Committees
+        if (Array.isArray(committees) && committees.length > 0) {
+            for (const committeeName of committees) {
+                // Retrieve CID from Committees table
+                const committeeResult = await client.query(
+                    'SELECT CID FROM Committees WHERE Cname = $1',
+                    [committeeName]
+                );
+
+                if (committeeResult.rows.length === 0) {
+                    throw new Error(`Committee not found: ${committeeName}`);
+                }
+
+                const cid = committeeResult.rows[0].cid;
+
+                // Insert into CommitteeAssignments table
+                await client.query(
+                    `INSERT INTO CommitteeAssignments (FID, CID)
+                     VALUES ($1, $2)
+                     ON CONFLICT (FID, CID) DO NOTHING`,
+                    [pid, cid]
+                );
+            }
+        }
+
+        await client.query('COMMIT');
+        res.json({ message: 'User profile created successfully' });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error creating profile:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });

@@ -7,14 +7,37 @@ import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
   const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
   const [schoolOptions, setSchoolOptions] = useState<{ value: string, label: string }[]>([]);
+  const [email, setEmail] = useState(''); // New state to store user email
 
   useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const response = await fetch('/current-user', { // New endpoint to get current user email
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setEmail(data.email);
+        } else {
+          throw new Error('Failed to fetch user email');
+        }
+      } catch (error) {
+        console.error('Error fetching user email:', error);
+      }
+    };
+
     const fetchCommitteeNames = async () => {
       try {
         const response = await fetch('/committees', {
@@ -59,6 +82,7 @@ const UserProfile: React.FC = () => {
       }
     };
 
+    fetchUserEmail(); // Fetch user email on component mount
     fetchCommitteeNames();
     fetchSchoolNames();
   }, []);
@@ -67,9 +91,80 @@ const UserProfile: React.FC = () => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // Trigger save to the database here
+  const handleSave = async () => {
+    try {
+      // Check if user exists
+      const checkResponse = await fetch(`/faculty-by-email?email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!checkResponse.ok) {
+        throw new Error('Error checking user existence');
+      }
+
+      const facultyData = await checkResponse.json();
+      const userExists = facultyData.length > 0;
+
+      if (userExists) {
+        // Update user profile
+        const response = await fetch('/update-user-profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            preferredName,
+            school,
+            committees,
+            serviceStatement,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          setIsEditing(false);
+        } else {
+          alert(data.message);
+        }
+      } else {
+        // Create user profile
+        const response = await fetch('/create-user-profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            preferredName,
+            school,
+            committees,
+            serviceStatement,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          setIsEditing(false);
+        } else {
+          alert(data.message);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Failed to save profile. Please try again.');
+    }
   };
 
   return (
@@ -77,8 +172,25 @@ const UserProfile: React.FC = () => {
       <Navbar />
       <h1 className='title'>Your Election Profile</h1>
       <div className="profile-form-container">
-        {isEditing ? (
+      {isEditing ? (
+          // Edit State
           <form className="profile-form">
+            <div className="form-group">
+              <label>Enter your first name: </label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Your First Name Here"
+              />
+              <label>Enter your last name: </label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Your Last Name Here"
+              />
+            </div>
             <div className="form-group">
               <label>Enter your preferred name (how it will appear on the ballot)</label>
               <input
