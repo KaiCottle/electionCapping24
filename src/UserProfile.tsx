@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
 import saveIcon from './assets/save-icon.png';
+import arrowIcon from './assets/arrow-icon.png'
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
@@ -108,6 +109,15 @@ const UserProfile: React.FC = () => {
       <div className="profile-form-container">
         {isEditing ? (
           // Edit State
+          <div className="editing-header">
+          <button
+            type="button"
+            className="go-back-button"
+            onClick={() => setIsEditing(false)}
+          >
+            <img src={arrowIcon} alt="Back arrow" className="back-arrow" />
+            <strong>Go Back</strong>
+          </button>
           <form className="profile-form">
             <div className="form-group">
               <label>Enter your first name: </label>
@@ -117,6 +127,8 @@ const UserProfile: React.FC = () => {
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Your First Name Here"
               />
+            </div>
+            <div className='form-group'>
               <label>Enter your last name: </label>
               <input
                 type="text"
@@ -165,11 +177,12 @@ const UserProfile: React.FC = () => {
             </div>
             <div className="form-group">
               <button type="button" className="save-button" onClick={handleSave}>
-                <p>Save Profile</p>
+                <p>Save Profile and Go Back to View</p>
                 {/* <img src={saveIcon} alt="Save" /> */}
               </button>
             </div>
           </form>
+        </div>
         ) : (
           // View State
           <div className="profile-view">
