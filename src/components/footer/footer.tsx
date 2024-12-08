@@ -4,7 +4,8 @@ import './footer.css'
 const Footer = () => {
   return (
     <footer className='footer'>
-        Copyright © 2024 Marist - All Rights Reserved.
+        Copyright © 2024 Marist - All Rights Reserved.<br />
+        Made by Team Ctrl+Alt+Defeat
     </footer>
   )
 }

@@ -5,6 +5,7 @@ import saveIcon from './assets/save-icon.png';
 import arrowIcon from './assets/arrow-icon.png'
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
+import Footer from './components/footer/footer';
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);

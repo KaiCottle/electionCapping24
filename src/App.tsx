@@ -6,7 +6,6 @@ import AdminView from './AdminView'; // Admin view component
 import UserProfile from './UserProfile'; // User profile component 
 import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
 import { useNavigate } from 'react-router-dom';
-import UserLogin from './User-Login';
 
 function App() {
   return (
@@ -27,9 +26,6 @@ function App() {
 
           {/* Route for the user profile page */}
           <Route path='/user-profile' element={<UserProfile />} />
-
-	  {/* Route for the User Login */}
-          <Route path="/User-Login" element={<UserLogin />} />
 
         </Routes>
       </Router>
