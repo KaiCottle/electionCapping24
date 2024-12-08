@@ -109,7 +109,20 @@ app.get('/committees', async (req, res) => {
       console.error('Error fetching committees:', err);
       res.status(500).json({ message: 'Server error' });
     }
-  });
+  }
+);
+
+// Route to fetch school names
+app.get('/schools', async (req, res) => {
+    try {
+        const result = await client.query('SELECT Sname FROM Schools');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching schools:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {

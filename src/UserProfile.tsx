@@ -6,12 +6,13 @@ import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
-  const [isEditing, setIsEditing] = useState(false); // State to track if in edit mode
+  const [isEditing, setIsEditing] = useState(false);
   const [preferredName, setPreferredName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
   const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<{ value: string, label: string }[]>([]);
 
   useEffect(() => {
     const fetchCommitteeNames = async () => {
@@ -35,14 +36,32 @@ const UserProfile: React.FC = () => {
         console.error('Error fetching committee names:', error);
       }
     };
-    fetchCommitteeNames();
-  }, []);
 
-  const schoolOptions = [
-    { value: 'School of Business', label: 'School of Business' },
-    { value: 'School of Science', label: 'School of Science' },
-    { value: 'School of Liberal Arts', label: 'School of Liberal Arts' },
-  ];
+    const fetchSchoolNames = async () => {
+      try {
+        const response = await fetch('/schools', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching school names: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const options = data.map((school: { sname: string }) => ({
+          value: school.sname,
+          label: school.sname,
+        }));
+        setSchoolOptions(options);
+      } catch (error) {
+        console.error('Error fetching school names:', error);
+      }
+    };
+
+    fetchCommitteeNames();
+    fetchSchoolNames();
+  }, []);
 
   const handleCommitteeChange = (selectedOptions: any) => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
@@ -50,7 +69,7 @@ const UserProfile: React.FC = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // You can also trigger a save to the database here
+    // Trigger save to the database here
   };
 
   return (
@@ -59,7 +78,6 @@ const UserProfile: React.FC = () => {
       <h1 className='title'>Your Election Profile</h1>
       <div className="profile-form-container">
         {isEditing ? (
-          // Edit State
           <form className="profile-form">
             <div className="form-group">
               <label>Enter your preferred name (how it will appear on the ballot)</label>
@@ -107,7 +125,6 @@ const UserProfile: React.FC = () => {
             </div>
           </form>
         ) : (
-          // View State
           <div className="profile-view">
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
