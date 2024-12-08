@@ -126,24 +126,38 @@ app.get('/schools', async (req, res) => {
   }
 );
 
-app.post('/check-email', async (req, res) => {
-    console.log('Starting /check-email');
-    if (!req.body) {
-        console.error('req.body is undefined');
-        return res.status(400).json({ message: 'Invalid request', found: false });
+// Middleware to ensure the user is authenticated
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
     }
-    const { email } = req.body;
+    res.status(401).json({ message: 'Unauthorized' });
+}
 
-    if (!email) {
-        console.error('Email is required');
-        return res.status(400).json({ message: 'Email is required', found: false });
-    }
-
+app.get('/get-user-data', ensureAuthenticated, async (req, res) => {
     try {
+        const email = req.user.email; // Get email from authenticated user
         console.log('Querying Faculty table for email:', email);
-        // Query the Faculty table for the given email
+        
+        // Query the Faculty and People tables for the given email, including first and last names
         const facultyResult = await client.query(
-            'SELECT fid, PrefName AS prefname, TheStatement AS thestatement, SchoolID AS schoolid FROM Faculty WHERE Email = $1',
+            `
+            SELECT 
+                f.fid, 
+                p.Fname AS firstName, 
+                p.Lname AS lastName, 
+                f.PrefName AS preferredName, 
+                f.TheStatement AS serviceStatement, 
+                f.SchoolID AS schoolid 
+            FROM 
+                Faculty f 
+            JOIN 
+                People p 
+            ON 
+                f.fid = p.fid 
+            WHERE 
+                f.Email = $1
+            `,
             [email]
         );
 
@@ -162,7 +176,7 @@ app.post('/check-email', async (req, res) => {
             [faculty.schoolid]
         );
 
-        const school = schoolResult.rows.length > 0 ? schoolResult.rows[0].sname : null;
+        const school = schoolResult.rows.length > 0 ? schoolResult.rows[0].sname : 'Unknown';
         console.log('School found:', school);
 
         // Query the CommitteeAssignments table for committee IDs
@@ -172,7 +186,7 @@ app.post('/check-email', async (req, res) => {
             [faculty.fid]
         );
 
-        const committeeIds = committeeAssignmentsResult.rows.map(row => row.committeeid);
+        const committeeIds = committeeAssignmentsResult.rows.map(row => row.cid);
         console.log('Committee IDs found:', committeeIds);
 
         let committees = [];
@@ -190,13 +204,15 @@ app.post('/check-email', async (req, res) => {
         // Respond with the required data
         res.json({
             found: true,
-            preferredName: faculty.prefname,
-            theStatement: faculty.thestatement,
+            firstName: faculty.firstname,
+            lastName: faculty.lastname,
+            preferredName: faculty.preferredname,
+            serviceStatement: faculty.servicestatement,
             school: school,
             committees: committees,
         });
     } catch (error) {
-        console.error('Error in /check-email:', error);
+        console.error('Error in /get-user-data:', error);
         res.status(500).json({ message: 'Server error', found: false });
     }
 });

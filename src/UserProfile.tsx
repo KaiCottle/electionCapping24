@@ -64,8 +64,39 @@ const UserProfile: React.FC = () => {
       }
     };
 
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/get-user-data', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching user data: ${response.statusText}`);
+        }
+        const data = await response.json();
+    
+        if (data.found) {
+          setFirstName(data.firstName);
+          setLastName(data.lastName);
+          setPreferredName(data.preferredName);
+          setSchool(data.school);
+          setCommittees(data.committees);
+          setServiceStatement(data.theStatement);
+          setError('');
+        } else {
+          setError('Email not found. Click "Edit Profile" to create a new profile.');
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('An error occurred. Please try again.');
+      }
+    };
+
     fetchCommitteeNames();
     fetchSchoolNames();
+    fetchUserData();
   }, []);
 
   const handleCommitteeChange = (selectedOptions: any) => {
@@ -92,32 +123,6 @@ const UserProfile: React.FC = () => {
       ...base,
       zIndex: 5,
     }),
-  };
-  
-
-  const handleCheckEmail = async () => {
-    try {
-      const response = await fetch('https://facelect.capping.ecrl.marist.edu/check-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      if (response.ok && data.found) {
-        setPreferredName(data.preferredName);
-        setSchool(data.school);
-        setCommittees(data.committees);
-        setServiceStatement(data.serviceStatement);
-        setError('');
-      } else {
-        setError('Email not found. Click "Edit Profile" to create a new profile.');
-      }
-    } catch (err) {
-      console.error('Error checking email:', err);
-      setError('An error occurred. Please try again.');
-    }
   };
 
   return (
