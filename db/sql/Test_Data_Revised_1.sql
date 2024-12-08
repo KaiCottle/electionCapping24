@@ -319,3 +319,22 @@ INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement
 
 INSERT INTO Admins (aid, uname, thepassword, godmode) VALUES
 	(1, 'admin1', 'cd6357efdd966de8c0cb2f876cc89ec74ce35f0968e11743987084bd42fb8944', TRUE)
+
+-- Our own test data, comment this out when deploying
+INSERT INTO People (Fname, Lname)
+VALUES ('Aaron', 'Bonilla');
+INSERT INTO Faculty (FID, SchoolID, IsHidden, PrefName, Email, URL, TheStatement, LastUpdated)
+VALUES (51, 3, FALSE, 'Bone', 'Aaron.Bonilla1@marist.edu', 'https://my.marist.edu', 'I love capping', CURRENT_TIMESTAMP());
+INSERT INTO CommitteeAssignments (FID, CID)
+VALUES 
+    (51, 2), -- Assignment to CommitteeID 2
+    (51, 15); -- Assignment to CommitteeID 15
+
+INSERT INTO People (FName, LName)
+VALUES ('Kai', 'Cottle');
+INSERT INTO Faculty (FID, SchoolID, IsHidden, PrefName, Email, URL, theStatement, LastUpdated)
+VALUES (52, 4, FALSE, 'Kai', 'Kai.Cottle1@marist.edu', 'https://my.marist.edu', 'Im so awesome', CURRENT_TIMESTAMP());
+INSERT INTO CommitteeAssignments (FID, CommitteeID)
+VALUES 
+(52, 3), -- Assignment to CommitteeID 2
+(52, 11); -- Assignment to CommitteeID 15
