@@ -166,7 +166,7 @@ app.post('/check-email', async (req, res) => {
         // Query the CommitteeAssignments table for committee IDs
         console.log('Querying CommitteeAssignments table for FID:', faculty.fid);
         const committeeAssignmentsResult = await client.query(
-            'SELECT CommitteeID FROM CommitteeAssignments WHERE FID = $1',
+            'SELECT CID FROM CommitteeAssignments WHERE FID = $1',
             [faculty.fid]
         );
 
