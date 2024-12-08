@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
 import saveIcon from './assets/save-icon.png';
-import arrowIcon from './assets/arrow-icon.png';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
@@ -94,7 +93,7 @@ const UserProfile: React.FC = () => {
         setServiceStatement(data.serviceStatement);
         setError('');
       } else {
-        setError('Email not found. Click "Edit Profile" to create a new profile 4.');
+        setError('Email not found. Click "Edit Profile" to create a new profile.');
       }
     } catch (err) {
       console.error('Error checking email:', err);
@@ -108,16 +107,7 @@ const UserProfile: React.FC = () => {
       <h1 className='title'>Your Election Profile</h1>
       <div className="profile-form-container">
         {isEditing ? (
-        // Edit State
-        <div className="editing-header">
-          <button
-            type="button"
-            className="go-back-button"
-            onClick={() => setIsEditing(false)}
-          >
-            <img src={arrowIcon} alt="Back arrow" className="back-arrow" />
-            Go Back
-          </button>
+          // Edit State
           <form className="profile-form">
             <div className="form-group">
               <label>Enter your first name: </label>
@@ -144,46 +134,69 @@ const UserProfile: React.FC = () => {
                 placeholder="Your Preferred Name Here"
               />
             </div>
-            {/* Additional form fields */}
-          </form>
-        </div>
-      ) : (
-          // View State
-          <div>
-            <div className="profile-view">
-              <p><strong>First Name:</strong> {firstName || 'Not Provided'}</p>
-              <p><strong>Last Name:</strong>{lastName || 'Not Provided'}</p>
-              <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
-              <p><strong>School:</strong> {school || 'Not selected'}</p>
-              <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>      
-              <p><strong>Service Statement:</strong> {serviceStatement || 'Not provided'}</p>
-              <button type="button" className="edit-button" onClick={() => setIsEditing(true)}>
-                Edit Profile
+            <div className="form-group">
+              <label>Select your School from the dropdown menu</label>
+              <Select
+                options={schoolOptions}
+                value={schoolOptions.find(option => option.value === school)}
+                onChange={(selectedOption) => setSchool(selectedOption?.value || '')}
+                placeholder="Select School"
+              />
+            </div>
+            <div className="form-group">
+              <label>Select the committees you have been a part of (can select multiple)</label>
+              <CreatableSelect
+                className='select-input'
+                isMulti
+                options={committeeOptions}
+                onChange={handleCommitteeChange}
+                placeholder="Select or input committees"
+              />
+            </div>
+            <div className="form-group">
+              <label>Create a Service Statement (Why someone should vote for you)</label>
+              <textarea
+                value={serviceStatement}
+                onChange={(e) => setServiceStatement(e.target.value)}
+                placeholder="Enter your statement here"
+                maxLength={300}
+              />
+              <small>{serviceStatement.length}/300</small>
+            </div>
+            <div className="form-group">
+              <button type="button" className="save-button" onClick={handleSave}>
+                <p>Save Profile</p>
+                {/* <img src={saveIcon} alt="Save" /> */}
               </button>
             </div>
-
+          </form>
+        ) : (
+          // View State
+          <div className="profile-view">
+            <p><strong>First Name:</strong> {firstName || 'Not Provided'}</p>
+            <p><strong>Last Name:</strong>{lastName || 'Not Provided'}</p>
+            <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
+            <p><strong>School:</strong> {school || 'Not selected'}</p>
+            <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>      
+            <p><strong>Service Statement:</strong> {serviceStatement || 'Not provided'}</p>
+            <button type="button" className="edit-button" onClick={() => setIsEditing(true)}>
+              Edit Profile
+            </button>
             <div className="email-check">
-              <p>Already have a profile? <button className="toggle-button" onClick={() => setIsEditing(!isEditing)}>Click here</button></p>
-              {isEditing && (
-                <div className="email-input-box">
-                  <label htmlFor="email">Enter marist email:</label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@marist.edu"
-                  />
-                  <button type="button" className="check-button" onClick={handleCheckEmail}>
-                    Check
-                  </button>
-                  {error && <p className="error">{error}</p>}
-                </div>
-              )}
+              <label>Enter marist email:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@marist.edu"
+              />
+              <button type="button" className="check-button" onClick={handleCheckEmail}>
+                Check
+              </button>
+              {error && <p className="error">{error}</p>}
             </div>
-          </div>   
+          </div>
         )}
-        
       </div>
     </div>
   );
