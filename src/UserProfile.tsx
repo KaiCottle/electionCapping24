@@ -17,6 +17,7 @@ const UserProfile: React.FC = () => {
   const [serviceStatement, setServiceStatement] = useState('');
   const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
   const [schoolOptions, setSchoolOptions] = useState<{ value: string, label: string }[]>([]);
+  const [profileExists, setProfileExists] = useState(false);
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
@@ -85,9 +86,11 @@ const UserProfile: React.FC = () => {
           setSchool(data.school);
           setCommittees(data.committees);
           setServiceStatement(data.serviceStatement);
+          setProfileExists(true); // Profile exists
           setError('');
         } else {
-          setError('Email not found. Click "Edit Profile" to create a new profile.');
+          setProfileExists(false); // Profile does not exist
+          setError('Profile not found. Click "Edit Profile" to create a new profile.');
         }
       } catch (err) {
         console.error('Error fetching user data:', err);
@@ -104,9 +107,43 @@ const UserProfile: React.FC = () => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // Trigger save to the database here
+  const handleSave = async () => {
+    // Prepare the data to be sent
+    const payload = {
+      firstName,
+      lastName,
+      preferredName,
+      school,
+      committees,
+      serviceStatement,
+    };
+  
+    // Decide the endpoint and method based on profile existence
+    const endpoint = profileExists ? '/edit-faculty' : '/create-faculty';
+    const method = profileExists ? 'PUT' : 'POST';
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (response.ok) {
+        // Handle success
+        setProfileExists(true); // Profile now exists
+        setIsEditing(false); // Exit edit mode
+      } else {
+        // Handle errors
+        const errorData = await response.json();
+        setError(errorData.message || 'An error occurred. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError('An error occurred. Please try again.');
+    }
   };
 
   const dropdownStyle = {
@@ -206,10 +243,9 @@ const UserProfile: React.FC = () => {
               <small>{serviceStatement.length}/300</small>
             </div>
             <div className="form-group">
-              <button type="button" className="save-button" onClick={handleSave}>
-                <p>Save Profile and Go Back to View</p>
-                {/* <img src={saveIcon} alt="Save" /> */}
-              </button>
+            <button type="button" className="save-button" onClick={handleSave}>
+              {profileExists ? 'Save Changes' : 'Create Profile'}
+            </button>
             </div>
           </form>
         </div>
