@@ -128,10 +128,12 @@ app.post('/check-email', async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
+        console.error('Email is required');
         return res.status(400).json({ message: 'Email is required', found: false });
     }
 
     try {
+        console.log('Querying Faculty table for email:', email);
         // Query the Faculty table for the given email
         const facultyResult = await client.query(
             'SELECT fid, PrefName, TheStatement, SchoolID FROM Faculty WHERE Email = $1',
@@ -139,35 +141,43 @@ app.post('/check-email', async (req, res) => {
         );
 
         if (facultyResult.rows.length === 0) {
+            console.error('Email not found:', email);
             return res.status(404).json({ message: 'Email not found', found: false });
         }
 
         const faculty = facultyResult.rows[0];
+        console.log('Faculty found:', faculty);
 
         // Query the Schools table for the school name
+        console.log('Querying Schools table for SchoolID:', faculty.schoolid);
         const schoolResult = await client.query(
             'SELECT Sname FROM Schools WHERE SID = $1',
             [faculty.schoolid]
         );
 
         const school = schoolResult.rows.length > 0 ? schoolResult.rows[0].sname : null;
+        console.log('School found:', school);
 
         // Query the CommitteeAssignments table for committee IDs
+        console.log('Querying CommitteeAssignments table for FID:', faculty.fid);
         const committeeAssignmentsResult = await client.query(
             'SELECT CommitteeID FROM CommitteeAssignments WHERE FID = $1',
             [faculty.fid]
         );
 
         const committeeIds = committeeAssignmentsResult.rows.map(row => row.committeeid);
+        console.log('Committee IDs found:', committeeIds);
 
         let committees = [];
         if (committeeIds.length > 0) {
             // Query the Committees table for committee names
+            console.log('Querying Committees table for Committee IDs:', committeeIds);
             const committeesResult = await client.query(
                 'SELECT Cname FROM Committees WHERE CID = ANY($1)',
                 [committeeIds]
             );
             committees = committeesResult.rows.map(row => row.cname);
+            console.log('Committees found:', committees);
         }
 
         // Respond with the required data
