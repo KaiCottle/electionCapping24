@@ -137,5 +137,78 @@ select,
     background-color: #831b25;
 }
 
+.container {
+    background-color: white;
+  }
+  
+  .profile-form-container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .email-check-container {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .email-check-toggle {
+    background-color: #b21e2d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .email-check-toggle:hover {
+    background-color: #831b25;
+  }
+  
+  .email-check {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .email-check label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .email-check input {
+    padding: 10px;
+    width: 300px;
+    border: 2px solid #b21e2d;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .check-button {
+    background-color: #b21e2d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .check-button:hover {
+    background-color: #831b25;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+  }
+  
+
 
   
