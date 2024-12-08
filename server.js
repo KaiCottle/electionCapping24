@@ -1,5 +1,6 @@
 require('dotenv').config(); // Load environment variables
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
@@ -151,6 +152,14 @@ app.get('/faculty', async (req, res) => {
         console.error('Database query error:', err);
         res.status(500).send('Error querying the database');
     }
+});
+
+// Serve static files from the React app's build directory
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Catch-all handler to serve React's index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Read SSL certificate and key
