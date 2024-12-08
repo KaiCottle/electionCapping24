@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
 import saveIcon from './assets/save-icon.png';
@@ -11,12 +11,32 @@ const UserProfile: React.FC = () => {
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
+  const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
 
-  const committeeOptions = [
-    { value: 'COM1', label: 'COM1' },
-    { value: 'COM2', label: 'COM2' },
-    { value: 'COM3', label: 'COM3' },
-  ];
+  useEffect(() => {
+    const fetchCommitteeNames = async () => {
+      try {
+        const response = await fetch('/committees', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching committee names: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const options = data.map((committee: { cname: string }) => ({
+          value: committee.cname,
+          label: committee.cname,
+        }));
+        setCommitteeOptions(options);
+      } catch (error) {
+        console.error('Error fetching committee names:', error);
+      }
+    };
+    fetchCommitteeNames();
+  }, []);
 
   const schoolOptions = [
     { value: 'School of Business', label: 'School of Business' },

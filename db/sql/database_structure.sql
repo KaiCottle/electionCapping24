@@ -1,9 +1,9 @@
-drop table if exists CommitteeAssignments;
-drop table if exists Committees;
-drop table if exists Faculty;
-drop table if exists Admins;
-drop table if exists Schools;
-drop table if exists People;
+drop table if exists CommitteeAssignments cascade;
+drop table if exists Committees cascade;
+drop table if exists Faculty cascade;
+drop table if exists Admins cascade;
+drop table if exists Schools cascade;
+drop table if exists People cascade;
 
 -- Creating tables
 
@@ -40,9 +40,9 @@ create table Faculty (
 primary key (FID)
 );
 
--- Add the new column 'token' to the Faculty table
-alter table Faculty
-add token text;
+-- Add the new column 'token' to the Faculty table (NOT GOING TO BE USED ANYMORE)
+--alter table Faculty
+--add token text;
 
 create table Committees (
 	CID   serial not null,

@@ -1,39 +1,40 @@
 require('dotenv').config(); // Load environment variables
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const crypto = require('crypto'); // Import the crypto module
 const { client, connectDB } = require('./db/connection'); // Import the client and connectDB
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const passport = require('passport');
-const SamlStrategy = require('passport-saml').Strategy;
+const SamlStrategy = require('@node-saml/passport-saml').Strategy;
 const session = require('express-session');
+const bodyParser = require("body-parser");
+const morgan = require('morgan'); 
+
+const httpPort = 80;
+const httpsPort = 443;
 
 const app = express();
 
 // List of allowed origins
 const allowedOrigins = [
     'https://facelect.capping.ecrl.marist.edu',
+    'https://api-a1cc77df.duosecurity.com',
+    'https://auth.it.marist.edu',
 ];
 
-// Configure CORS to allow requests from your React app
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-}));
-
+app.use(cors());
 app.use(express.json()); // Parse incoming JSON data
+app.use(morgan('common')); // Log HTTP requests
+
+// Connect to the PostgreSQL database
+connectDB();
 
 // Configure session middleware
 app.use(session({
-    secret: 'your-secret-key', // Replace with a strong secret key
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
@@ -43,9 +44,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect to the PostgreSQL database
-connectDB();
-
 // Function to hash passwords using SHA-256
 const hashPassword = (password) => {
     return crypto.createHash('sha256').update(password).digest('hex');
@@ -54,22 +52,23 @@ const hashPassword = (password) => {
 // Passport SAML strategy configuration
 const samlStrategy = new SamlStrategy(
     {
-      path: '/login/callback',
+      callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
       issuer: 'https://facelect.capping.ecrl.marist.edu',
-      cert: fs.readFileSync('./backend/idp_metadata.xml', 'utf-8'),
+      decryptionPvk: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
+      privateCert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem', 'utf-8'),
+      idpCert: fs.readFileSync('./backend/idp_cert.pem', 'utf-8'),
+      wantAssertionsSigned: false,
+      wantAuthnResponseSigned: false
     },
-    function(profile, done) {
-      findByEmail(profile.email, function(err, user) {
-        if (err) {
-          return done(err);
-        }
+    (profile, done) => {
+        // Extract user information from the profile
+        const user = {
+            email: profile.emailAddress,
+        };
         return done(null, user);
-      });
     }
 );
-
-passport.use(samlStrategy);
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -79,11 +78,38 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// Route to serve SP metadata
-app.get('/metadata', (req, res) => {
-    res.type('application/xml');
-    res.status(200).send(samlStrategy.generateServiceProviderMetadata(fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt', 'utf-8')));
-});
+// SSO callback route
+app.post(
+  '/login/callback',
+  bodyParser.urlencoded({ extended: false }),
+  passport.authenticate("saml", {
+    failureRedirect: "/",
+    failureFlash: true,
+  }),
+  function (req, res) {
+    res.redirect("/user-profile");
+  }
+);
+
+// SSO login route
+app.get('/sso/login', 
+    passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
+    function (req, res) {
+        res.redirect("/");
+    }
+);
+
+// Correct route handler with both req and res
+app.get('/committees', async (req, res) => {
+    try {
+      const result = await client.query('SELECT Cname FROM Committees');
+      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching committees:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
@@ -175,28 +201,29 @@ app.get('/faculty', async (req, res) => {
     }
 });
 
-// SSO login route
-app.get('/sso/login', passport.authenticate('saml', {
-    successRedirect: '/user-profile',
-    failureRedirect: '/login'
-}));
+// Serve static files from the React app's build directory
+app.use(express.static(path.join(__dirname, 'build')));
 
-// SSO callback route
-app.post('/login/callback', passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-}), (req, res) => {
-    res.redirect('/user-profile');
+// Catch-all handler to serve React's index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Read SSL certificate and key
 const options = {
-    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.key'),
-    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.crt'),
+    key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem'),
+    cert: fs.readFileSync('./backend/2024_facelect.capping.ecrl.marist.edu.pem'),
     ca: fs.readFileSync('./backend/2024_InCommonCA.crt'),
 };
 
-// Create HTTPS server on port 3001
-https.createServer(options, app).listen(3001, () => {
-    console.log('HTTPS Server running on port 3001');
+// create servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(options, app);
+
+// start servers
+httpServer.listen(httpPort, () => {
+    console.log(`HTTP Server running on port ${httpPort}`);
+});
+httpsServer.listen(httpsPort, () => {
+    console.log(`HTTPS Server running on port ${httpsPort}`);
 });
