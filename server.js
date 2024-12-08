@@ -13,8 +13,8 @@ const session = require('express-session');
 const bodyParser = require("body-parser");
 const morgan = require('morgan'); 
 
-const httpPort = 8080;
-const httpsPort = 8443;
+const httpPort = 80;
+const httpsPort = 443;
 
 const app = express();
 
