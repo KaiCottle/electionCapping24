@@ -79,17 +79,19 @@ passport.deserializeUser((user, done) => {
 });
 
 // SSO callback route
-app.post(
-  '/login/callback',
-  bodyParser.urlencoded({ extended: false }),
-  passport.authenticate("saml", {
-    failureRedirect: "/",
-    failureFlash: true,
-  }),
-  function (req, res) {
-    res.redirect("/user-profile");
-  }
-);
+app.post('/login/callback',
+    bodyParser.urlencoded({ extended: false }),
+    passport.authenticate("saml", {
+      failureRedirect: "/",
+      failureFlash: true,
+    }),
+    function (req, res) {
+      // Access the authenticated user
+      const user = req.user;
+      console.log('Authenticated user:', user);
+      res.redirect("/user-profile");
+    }
+  );
 
 // SSO login route
 app.get('/sso/login', 
