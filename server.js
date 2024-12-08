@@ -126,51 +126,63 @@ app.get('/schools', async (req, res) => {
 
 app.post('/check-email', async (req, res) => {
     const { email } = req.body;
-  
+
     if (!email) {
-      return res.status(400).json({ message: 'Email is required.' });
+        return res.status(400).json({ message: 'Email is required', found: false });
     }
-  
+
     try {
-      const query = `
-        SELECT 
-          f.prefname, 
-          s.sname AS school, 
-          f.thestatement AS serviceStatement,
-          ARRAY_AGG(c.cname) AS committees
-        FROM 
-          Faculty f
-        LEFT JOIN 
-          Schools s ON f.schoolid = s.sid
-        LEFT JOIN 
-          CommitteeAssignments ca ON f.fid = ca.fid
-        LEFT JOIN 
-          Committees c ON ca.cid = c.cid
-        WHERE 
-          f.email = $1
-        GROUP BY 
-          f.prefname, s.sname, f.thestatement;
-      `;
-  
-      const result = await client.query(query, [email]);
-  
-      if (result.rows.length === 0) {
-        return res.status(404).json({ message: 'Email not found.' });
-      }
-  
-      const faculty = result.rows[0];
-  
-      res.json({
-        preferredName: faculty.prefname,
-        school: faculty.school,
-        serviceStatement: faculty.serviceStatement,
-        committees: faculty.committees.filter(c => c !== null),
-      });
+        // Query the Faculty table for the given email
+        const facultyResult = await client.query(
+            'SELECT fid, PrefName, TheStatement, SchoolID FROM Faculty WHERE Email = $1',
+            [email]
+        );
+
+        if (facultyResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Email not found', found: false });
+        }
+
+        const faculty = facultyResult.rows[0];
+
+        // Query the Schools table for the school name
+        const schoolResult = await client.query(
+            'SELECT Sname FROM Schools WHERE SID = $1',
+            [faculty.schoolid]
+        );
+
+        const school = schoolResult.rows.length > 0 ? schoolResult.rows[0].sname : null;
+
+        // Query the CommitteeAssignments table for committee IDs
+        const committeeAssignmentsResult = await client.query(
+            'SELECT CommitteeID FROM CommitteeAssignments WHERE FID = $1',
+            [faculty.fid]
+        );
+
+        const committeeIds = committeeAssignmentsResult.rows.map(row => row.committeeid);
+
+        let committees = [];
+        if (committeeIds.length > 0) {
+            // Query the Committees table for committee names
+            const committeesResult = await client.query(
+                'SELECT Cname FROM Committees WHERE CID = ANY($1)',
+                [committeeIds]
+            );
+            committees = committeesResult.rows.map(row => row.cname);
+        }
+
+        // Respond with the required data
+        res.json({
+            found: true,
+            preferredName: faculty.prefname,
+            theStatement: faculty.thestatement,
+            school: school,
+            committees: committees,
+        });
     } catch (error) {
-      console.error('Error checking email:', error);
-      res.status(500).json({ message: 'Server error.' });
+        console.error('Error in /check-email:', error);
+        res.status(500).json({ message: 'Server error', found: false });
     }
-  });
+});
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {

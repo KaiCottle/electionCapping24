@@ -77,14 +77,13 @@ const UserProfile: React.FC = () => {
   };
 
   const handleCheckEmail = async () => {
-    const normalizedEmail = email.trim().toLowerCase(); // Normalize email
     try {
-      const response = await fetch('/api/check-email', {
+      const response = await fetch('/check-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: normalizedEmail }),
+        body: JSON.stringify({ email }),
       });
       const data = await response.json();
       if (response.ok && data.found) {
