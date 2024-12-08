@@ -154,7 +154,7 @@ app.get('/get-user-data', ensureAuthenticated, async (req, res) => {
             JOIN 
                 People p 
             ON 
-                f.fid = p.fid 
+                f.fid = p.pid 
             WHERE 
                 f.Email = $1
             `,
