@@ -33,7 +33,21 @@ h1 {
     margin-bottom: 30px;
     width: 95%;
     padding-top: 10px;
+    transition: border 0.3s, box-shadow 0.3s;
 }
+
+#inputBox {
+    border: 2px solid #5a5a5a;
+    border-radius: 5px;
+    outline: none;
+    margin-top: 10px;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+
+#inputBox:focus {
+    border-color: #B80E0E;
+    box-shadow: 0 0 8px rgba(184, 14, 14, 0.5);
+  }
 
 .form-group label {
     font-size: 14px;
@@ -63,7 +77,9 @@ textarea::placeholder {
 
 /*The next 4 are supposed to style the committee dropdown,
    but I don't think it did anything */
-select,
+input[type="text"],
+textarea,
+select, /* Added select to match the styling */
 .css-yk16xz-control {
     width: 100%;
     padding: 10px;
@@ -239,6 +255,3 @@ select,
     height: 16px;
     margin-right: 8px;
 }
-
-
-  

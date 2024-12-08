@@ -77,6 +77,24 @@ const UserProfile: React.FC = () => {
     // Trigger save to the database here
   };
 
+  const dropdownStyle = {
+    control: (base: any, state: any) => ({
+      ...base,
+      border: state.isFocused ? '2px solid #B80E0E' : '2px solid #5a5a5a',
+      boxShadow: state.isFocused ? '0 0 8px rgba(184, 14, 14, 0.5)' : 'none',
+      '&:hover': {
+        border: state.isFocused ? '2px solid #B80E0E' : '2px solid #5a5a5a',
+      },
+      borderRadius: '5px',
+      width: '105%',
+    }),
+    menu: (base: any) => ({
+      ...base,
+      zIndex: 5,
+    }),
+  };
+  
+
   const handleCheckEmail = async () => {
     try {
       const response = await fetch('https://facelect.capping.ecrl.marist.edu/check-email', {
@@ -123,6 +141,7 @@ const UserProfile: React.FC = () => {
               <label>Enter your first name: </label>
               <input
                 type="text"
+                id='inputBox'
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Your First Name Here"
@@ -132,6 +151,7 @@ const UserProfile: React.FC = () => {
               <label>Enter your last name: </label>
               <input
                 type="text"
+                id='inputBox'
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Your Last Name Here"
@@ -141,6 +161,7 @@ const UserProfile: React.FC = () => {
               <label>Enter your preferred name (how it will appear on the ballot)</label>
               <input
                 type="text"
+                id='inputBox'
                 value={preferredName}
                 onChange={(e) => setPreferredName(e.target.value)}
                 placeholder="Your Preferred Name Here"
@@ -153,6 +174,7 @@ const UserProfile: React.FC = () => {
                 value={schoolOptions.find(option => option.value === school)}
                 onChange={(selectedOption) => setSchool(selectedOption?.value || '')}
                 placeholder="Select School"
+                styles={dropdownStyle}
               />
             </div>
             <div className="form-group">
@@ -163,12 +185,14 @@ const UserProfile: React.FC = () => {
                 options={committeeOptions}
                 onChange={handleCommitteeChange}
                 placeholder="Select or input committees"
+                styles={dropdownStyle}
               />
             </div>
             <div className="form-group">
               <label>Create a Service Statement (Why someone should vote for you)</label>
               <textarea
                 value={serviceStatement}
+                id='inputBox'
                 onChange={(e) => setServiceStatement(e.target.value)}
                 placeholder="Enter your statement here"
                 maxLength={300}
