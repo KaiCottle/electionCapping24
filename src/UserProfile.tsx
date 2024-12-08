@@ -195,19 +195,6 @@ const UserProfile: React.FC = () => {
             <button type="button" className="edit-button" onClick={() => setIsEditing(true)}>
               Edit Profile
             </button>
-            <div className="email-check">
-              <label>Enter marist email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@marist.edu"
-              />
-              <button type="button" className="check-button" onClick={handleCheckEmail}>
-                Check
-              </button>
-              {error && <p className="error">{error}</p>}
-            </div>
           </div>
         )}
       </div>
