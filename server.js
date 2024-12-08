@@ -61,14 +61,13 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
-    }
-));
+    function (profile, done) {
+        return done(null, {
+          email: profile.email,
+        });
+      }
+    )
+  );
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -86,10 +85,13 @@ app.post(
     failureRedirect: "/",
     failureFlash: true,
   }),
-  function (req, res) {
-    res.redirect("/user-profile");
-  }
-);
+    function (req, res) {
+      // Access the authenticated user
+      console.log("req.user");
+      console.log(req.user);
+      res.redirect("/user-profile");
+    }
+  );
 
 // SSO login route
 app.get('/sso/login',
@@ -166,7 +168,7 @@ app.post('/check-email', async (req, res) => {
         // Query the CommitteeAssignments table for committee IDs
         console.log('Querying CommitteeAssignments table for FID:', faculty.fid);
         const committeeAssignmentsResult = await client.query(
-            'SELECT CommitteeID FROM CommitteeAssignments WHERE FID = $1',
+            'SELECT CID FROM CommitteeAssignments WHERE FID = $1',
             [faculty.fid]
         );
 
