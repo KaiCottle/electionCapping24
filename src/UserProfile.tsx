@@ -221,7 +221,7 @@ const UserProfile: React.FC = () => {
               />
             </div>
             <div className="form-group">
-              <label>Select the committees you have been a part of (can select multiple)</label>
+              <label>Select the committees you have been a part of (can select multiple, replaces old selection)</label>
               <CreatableSelect
                 className='select-input'
                 isMulti
