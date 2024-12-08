@@ -96,6 +96,9 @@ app.post(
   }),
   function (req, res) {
     console.log("raw assertion XML:", profile.getAssertionXml());
+    console.log('User found');
+    console.log(req.user);
+    console.log(user);
     res.redirect("/user-profile");
   }
 );
