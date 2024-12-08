@@ -124,6 +124,54 @@ app.get('/schools', async (req, res) => {
   }
 );
 
+app.post('/check-email', async (req, res) => {
+    const { email } = req.body;
+  
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required.' });
+    }
+  
+    try {
+      const query = `
+        SELECT 
+          f.prefname, 
+          s.sname AS school, 
+          f.thestatement AS serviceStatement,
+          ARRAY_AGG(c.cname) AS committees
+        FROM 
+          Faculty f
+        LEFT JOIN 
+          Schools s ON f.schoolid = s.sid
+        LEFT JOIN 
+          FacultyCommittees fc ON f.fid = fc.fid
+        LEFT JOIN 
+          Committees c ON fc.cid = c.cid
+        WHERE 
+          f.email = $1
+        GROUP BY 
+          f.prefname, s.sname, f.thestatement;
+      `;
+  
+      const result = await client.query(query, [email]);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'Email not found.' });
+      }
+  
+      const faculty = result.rows[0];
+  
+      res.json({
+        preferredName: faculty.prefname,
+        school: faculty.school,
+        serviceStatement: faculty.serviceStatement,
+        committees: faculty.committees.filter(c => c !== null),
+      });
+    } catch (error) {
+      console.error('Error checking email:', error);
+      res.status(500).json({ message: 'Server error.' });
+    }
+});
+
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
