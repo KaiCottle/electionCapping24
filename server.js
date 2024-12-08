@@ -85,7 +85,7 @@ app.post(
   }),
   function (req, res) {
     res.redirect("/user-profile");
-  },
+  }
 );
 
 // SSO login route
@@ -93,13 +93,14 @@ app.get('/sso/login',
     passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
     function (req, res) {
         res.redirect("/");
-    },
+    }
 );
 
 // Login route
 app.get('/login', (req, res) => {
     res.send('Login page');
-}
+    }
+);
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
