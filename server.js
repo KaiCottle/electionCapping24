@@ -208,6 +208,27 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// function to find user by email
+const findByEmail = async (email, callback) => {
+    try {
+        await client.connect(); // Connect to the database
+        const result = await client.query('SELECT * FROM Faculty WHERE Email = $1', [email]); // Query to find the user by email
+
+        if (result.rows.length > 0) {
+            callback(null, result.rows[0]); // User found, return the user object
+        } else {
+            callback(null, null); // User not found, return null
+        }
+    } catch (err) {
+        callback(err, null); // Error occurred, return the error
+    } finally {
+        await client.end(); // Close the database connection
+    }
+};
+
+module.exports = findByEmail;
+
+
 // Read SSL certificate and key
 const options = {
     key: fs.readFileSync('./backend/facelect.capping.ecrl.marist.edu.pem'),
