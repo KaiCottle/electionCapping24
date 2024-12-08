@@ -97,12 +97,6 @@ app.get('/sso/login',
     }
 );
 
-app.get('/', (req, res) => {
-    res.send('well well well');
-}
-);
-
-
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
