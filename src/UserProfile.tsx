@@ -173,6 +173,8 @@ const UserProfile: React.FC = () => {
         ) : (
           // View State
           <div className="profile-view">
+            <p><strong>First Name:</strong> {firstName || 'Not Provided'}</p>
+            <p><strong>Last Name:</strong>{lastName || 'Not Provided'}</p>
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
             <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>      

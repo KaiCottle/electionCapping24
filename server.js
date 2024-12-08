@@ -125,6 +125,7 @@ app.get('/schools', async (req, res) => {
 );
 
 app.post('/check-email', async (req, res) => {
+    console.log('Starting /check-email');
     if (!req.body) {
         console.error('req.body is undefined');
         return res.status(400).json({ message: 'Invalid request', found: false });
