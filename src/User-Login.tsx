@@ -7,7 +7,7 @@ import backgroundImage from './assets/background.jpg';
 import logoImage from './assets/logo.png';
 import Footer from './components/footer/footer';
 
-const AdminLogin: React.FC = () => {
+const UserLogin: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,8 +16,8 @@ const AdminLogin: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('Submitting login form'); // Log form submission
     try {
-      console.log("login submitted");
       const response = await fetch('https://facelect.capping.ecrl.marist.edu/admin-login', {
         method: 'POST',
         headers: {
@@ -48,7 +48,7 @@ const AdminLogin: React.FC = () => {
       <img src={backgroundImage} className='bg-image' alt='Background' />
       <img src={logoImage} className='logo' alt='Marist Election Profile Logo' />
       <div className='login-box'>
-        <h2 id='loginText'>Admin Login:</h2>
+        <h2 id='loginText'>User Login:</h2>
         {error && <p className='error'>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className='input-field'>
@@ -84,4 +84,4 @@ const AdminLogin: React.FC = () => {
   );
 }
 
-export default AdminLogin;
+export default UserLogin;

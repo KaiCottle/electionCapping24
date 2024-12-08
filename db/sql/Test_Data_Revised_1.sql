@@ -109,6 +109,11 @@ INSERT INTO Committees (Cname) VALUES
     ('Various hiring/staffing search committees'),
     ('Veterans affair committee'),
     ('Any of the Middle States working committees'),
+    ('Retention Committee'),
+    ('Sustainability Action Planning Committee'),
+    ('Master Plan Steering Committee'),
+    ('Athletics Strategic Planning Committee'),
+    ('Marist + AI'),
     ('Any of the Strategic Planning committees');
 
 INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement, LastUpdated) VALUES 

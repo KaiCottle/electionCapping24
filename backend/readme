@@ -3,4 +3,6 @@ Instructions for VM:
 Shibboleth files are located in /etc/shibboleth
 - The main config file is shibboleth.xml
 
+Apache files are located in /etc/apache2
+
 Server files are located on the vm at /var/www/html

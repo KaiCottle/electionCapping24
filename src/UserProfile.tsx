@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from './components/navbar/Navbar';
 import saveIcon from './assets/save-icon.png';
@@ -6,25 +6,68 @@ import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 
 const UserProfile: React.FC = () => {
-  const [isEditing, setIsEditing] = useState(false); // State to track if in edit mode
+  const [isEditing, setIsEditing] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [school, setSchool] = useState('');
   const [committees, setCommittees] = useState<string[]>([]);
   const [serviceStatement, setServiceStatement] = useState('');
+  const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<{ value: string, label: string }[]>([]);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
 
-  const committeeOptions = [
-    { value: 'COM1', label: 'COM1' },
-    { value: 'COM2', label: 'COM2' },
-    { value: 'COM3', label: 'COM3' },
-  ];
+  useEffect(() => {
+    const fetchCommitteeNames = async () => {
+      try {
+        const response = await fetch('/committees', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching committee names: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const options = data.map((committee: { cname: string }) => ({
+          value: committee.cname,
+          label: committee.cname,
+        }));
+        setCommitteeOptions(options);
+      } catch (error) {
+        console.error('Error fetching committee names:', error);
+      }
+    };
 
-  const schoolOptions = [
-    { value: 'School of Business', label: 'School of Business' },
-    { value: 'School of Science', label: 'School of Science' },
-    { value: 'School of Liberal Arts', label: 'School of Liberal Arts' },
-  ];
+    const fetchSchoolNames = async () => {
+      try {
+        const response = await fetch('/schools', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error fetching school names: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const options = data.map((school: { sname: string }) => ({
+          value: school.sname,
+          label: school.sname,
+        }));
+        setSchoolOptions(options);
+      } catch (error) {
+        console.error('Error fetching school names:', error);
+      }
+    };
+
+    fetchCommitteeNames();
+    fetchSchoolNames();
+  }, []);
 
   const handleCommitteeChange = (selectedOptions: any) => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
@@ -32,7 +75,32 @@ const UserProfile: React.FC = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // You can also trigger a save to the database here
+    // Trigger save to the database here
+  };
+
+  const handleCheckEmail = async () => {
+    try {
+      const response = await fetch('https://facelect.capping.ecrl.marist.edu/check-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (response.ok && data.found) {
+        setPreferredName(data.preferredName);
+        setSchool(data.school);
+        setCommittees(data.committees);
+        setServiceStatement(data.serviceStatement);
+        setError('');
+      } else {
+        setError('Email not found. Click "Edit Profile" to create a new profile 4.');
+      }
+    } catch (err) {
+      console.error('Error checking email:', err);
+      setError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -111,11 +179,24 @@ const UserProfile: React.FC = () => {
             <p><strong>Last Name:</strong>{lastName || 'Not Provided'}</p>
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
-            <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>
+            <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>      
             <p><strong>Service Statement:</strong> {serviceStatement || 'Not provided'}</p>
             <button type="button" className="edit-button" onClick={() => setIsEditing(true)}>
               Edit Profile
             </button>
+            <div className="email-check">
+              <label>Enter marist email:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@marist.edu"
+              />
+              <button type="button" className="check-button" onClick={handleCheckEmail}>
+                Check
+              </button>
+              {error && <p className="error">{error}</p>}
+            </div>
           </div>
         )}
       </div>
