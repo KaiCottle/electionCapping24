@@ -78,7 +78,7 @@ const UserProfile: React.FC = () => {
 
   const handleCheckEmail = async () => {
     try {
-      const response = await fetch('/check-email', {
+      const response = await fetch('https://facelect.capping.ecrl.marist.edu/check-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,8 +117,52 @@ const UserProfile: React.FC = () => {
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Your First Name Here"
               />
+              <label>Enter your last name: </label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Your Last Name Here"
+              />
             </div>
-            {/* ... other form fields ... */}
+            <div className="form-group">
+              <label>Enter your preferred name (how it will appear on the ballot)</label>
+              <input
+                type="text"
+                value={preferredName}
+                onChange={(e) => setPreferredName(e.target.value)}
+                placeholder="Your Preferred Name Here"
+              />
+            </div>
+            <div className="form-group">
+              <label>Select your School from the dropdown menu</label>
+              <Select
+                options={schoolOptions}
+                value={schoolOptions.find(option => option.value === school)}
+                onChange={(selectedOption) => setSchool(selectedOption?.value || '')}
+                placeholder="Select School"
+              />
+            </div>
+            <div className="form-group">
+              <label>Select the committees you have been a part of (can select multiple)</label>
+              <CreatableSelect
+                className='select-input'
+                isMulti
+                options={committeeOptions}
+                onChange={handleCommitteeChange}
+                placeholder="Select or input committees"
+              />
+            </div>
+            <div className="form-group">
+              <label>Create a Service Statement (Why someone should vote for you)</label>
+              <textarea
+                value={serviceStatement}
+                onChange={(e) => setServiceStatement(e.target.value)}
+                placeholder="Enter your statement here"
+                maxLength={300}
+              />
+              <small>{serviceStatement.length}/300</small>
+            </div>
             <div className="form-group">
               <button type="button" className="save-button" onClick={handleSave}>
                 <p>Save Profile</p>
