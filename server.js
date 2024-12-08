@@ -63,7 +63,7 @@ passport.use(new SamlStrategy(
     },
     function (profile, done) {
         return done(null, {
-          email: profile.emailAddress,
+          email: profile.email,
         });
       }
     )
