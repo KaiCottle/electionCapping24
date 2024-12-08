@@ -11,7 +11,7 @@ const passport = require('passport');
 const SamlStrategy = require('@node-saml/passport-saml').Strategy;
 const session = require('express-session');
 const bodyParser = require("body-parser");
-const morgan = require('morgan'); 
+const morgan = require('morgan');
 
 const httpPort = 80;
 const httpsPort = 443;
@@ -37,7 +37,7 @@ app.use(session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Ensure cookies are only used over HTTPS in production 
 }));
 
 // Initialize Passport and restore authentication state, if any, from the session
@@ -50,7 +50,7 @@ const hashPassword = (password) => {
 };
 
 // Passport SAML strategy configuration
-const samlStrategy = new SamlStrategy(
+passport.use(new SamlStrategy(
     {
       callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
       entryPoint: 'https://auth.it.marist.edu/idp/profile/SAML2/Redirect/SSO',
@@ -68,7 +68,7 @@ const samlStrategy = new SamlStrategy(
         };
         return done(null, user);
     }
-);
+));
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -92,14 +92,14 @@ app.post(
 );
 
 // SSO login route
-app.get('/sso/login', 
+app.get('/sso/login',
     passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
     function (req, res) {
         res.redirect("/");
     }
 );
 
-// Correct route handler with both req and res
+// Route to fetch committee names
 app.get('/committees', async (req, res) => {
     try {
       const result = await client.query('SELECT Cname FROM Committees');
@@ -152,197 +152,11 @@ app.post('/admin-login', async (req, res) => {
     }
 });
 
-// Route to get current user's email
-app.get('/current-user', ensureAuthenticated, (req, res) => {
-    try {
-      res.json({ email: req.user.email });
-    } catch (err) {
-      console.error('Error fetching current user:', err);
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
-  
-  // New route to fetch faculty by email
-  app.get('/faculty-by-email', async (req, res) => {
-    const { email } = req.query;
-    if (!email) {
-      return res.status(400).json({ message: 'Email query parameter is required' });
-    }
-  
-    try {
-      const result = await client.query('SELECT * FROM Faculty WHERE Email = $1', [email]);
-      res.json(result.rows);
-    } catch (err) {
-      console.error('Error fetching faculty by email:', err);
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
-
-// Route to update user profile
-app.post('/update-user-profile', ensureAuthenticated, async (req, res) => {
-    const email = req.user.email; // Retrieve email from authenticated user
-    const { firstName, lastName, preferredName, school, committees, serviceStatement } = req.body;
-
-    try {
-        await client.query('BEGIN');
-
-        // Retrieve FID from Faculty using Email
-        const facultyResult = await client.query(
-            'SELECT FID FROM Faculty WHERE Email = $1',
-            [email]
-        );
-
-        if (facultyResult.rows.length === 0) {
-            throw new Error('Faculty member not found');
-        }
-
-        const fid = facultyResult.rows[0].fid;
-
-        // Retrieve SID from Schools using school name
-        const schoolResult = await client.query(
-            'SELECT sid FROM Schools WHERE sname = $1',
-            [school]
-        );
-
-        if (schoolResult.rows.length === 0) {
-            throw new Error('School not found');
-        }
-
-        const sid = schoolResult.rows[0].sid;
-
-        // Update People table with firstName and lastName
-        await client.query(
-            `UPDATE People
-             SET Fname = $1, Lname = $2
-             WHERE PID = $3`,
-            [firstName, lastName, fid]
-        );
-
-        // Update Faculty table with other profile details and set lastUpdated to current timestamp
-        await client.query(
-            `UPDATE Faculty
-             SET PrefName = $1, SchoolID = $2, ServiceStatement = $3, LastUpdated = NOW()
-             WHERE FID = $4`,
-            [preferredName, sid, serviceStatement, fid]
-        );
-
-        // Assign Committees
-        if (Array.isArray(committees) && committees.length > 0) {
-            for (const committeeName of committees) {
-                // Retrieve CID from Committees table
-                const committeeResult = await client.query(
-                    'SELECT CID FROM Committees WHERE Cname = $1',
-                    [committeeName]
-                );
-
-                if (committeeResult.rows.length === 0) {
-                    throw new Error(`Committee not found: ${committeeName}`);
-                }
-
-                const cid = committeeResult.rows[0].cid;
-
-                // Insert into CommitteeAssignments table without deleting existing assignments
-                await client.query(
-                    `INSERT INTO CommitteeAssignments (FID, CID)
-                     VALUES ($1, $2)
-                     ON CONFLICT (FID, CID) DO NOTHING`,
-                    [fid, cid]
-                );
-            }
-        }
-
-        await client.query('COMMIT');
-        res.json({ message: 'Profile updated successfully' });
-    } catch (err) {
-        await client.query('ROLLBACK');
-        console.error('Error updating profile:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-// Route to create user profile
-app.post('/create-user-profile', ensureAuthenticated, async (req, res) => {
-    const email = req.user.email; // Retrieve email from authenticated user
-    const { firstName, lastName, preferredName, school, committees, serviceStatement } = req.body;
-
-    try {
-        await client.query('BEGIN');
-
-        // Insert into People table
-        const insertPeopleResult = await client.query(
-            `INSERT INTO People (Fname, Lname)
-             VALUES ($1, $2)
-             RETURNING PID`,
-            [firstName, lastName]
-        );
-
-        const pid = insertPeopleResult.rows[0].pid;
-
-        // Retrieve SID from Schools using school name
-        const schoolResult = await client.query(
-            'SELECT sid, sname FROM Schools WHERE sname = $1',
-            [school]
-        );
-
-        if (schoolResult.rows.length === 0) {
-            throw new Error('School not found');
-        }
-
-        const sid = schoolResult.rows[0].sid;
-        const schoolName = schoolResult.rows[0].sname;
-
-        // Hyphenate school name and names for URL
-        const hyphenatedSchool = schoolName.toLowerCase().replace(/\s+/g, '-');
-        const hyphenatedFirstName = firstName.toLowerCase().replace(/\s+/g, '-');
-        const hyphenatedLastName = lastName.toLowerCase().replace(/\s+/g, '-');
-        const url = `https://www.marist.edu/${hyphenatedSchool}/faculty/${hyphenatedFirstName}-${hyphenatedLastName}`;
-
-        // Insert into Faculty table without Committees
-        await client.query(
-            `INSERT INTO Faculty (FID, Email, SchoolID, IsHidden, PrefName, URL, TheStatement, LastUpdated)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
-            [pid, email, sid, false, preferredName, url, serviceStatement]
-        );
-
-        // Assign Committees
-        if (Array.isArray(committees) && committees.length > 0) {
-            for (const committeeName of committees) {
-                // Retrieve CID from Committees table
-                const committeeResult = await client.query(
-                    'SELECT CID FROM Committees WHERE Cname = $1',
-                    [committeeName]
-                );
-
-                if (committeeResult.rows.length === 0) {
-                    throw new Error(`Committee not found: ${committeeName}`);
-                }
-
-                const cid = committeeResult.rows[0].cid;
-
-                // Insert into CommitteeAssignments table
-                await client.query(
-                    `INSERT INTO CommitteeAssignments (FID, CID)
-                     VALUES ($1, $2)
-                     ON CONFLICT (FID, CID) DO NOTHING`,
-                    [pid, cid]
-                );
-            }
-        }
-
-        await client.query('COMMIT');
-        res.json({ message: 'User profile created successfully' });
-    } catch (err) {
-        await client.query('ROLLBACK');
-        console.error('Error creating profile:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
 // Example existing route for fetching faculty data (unchanged)
 app.get('/faculty', async (req, res) => {
     try {
-        const result = await client.query(` 
-            SELECT 
+        const result = await client.query(`
+            SELECT
                 faculty.fid,
                 faculty.email,
                 faculty.ishidden,

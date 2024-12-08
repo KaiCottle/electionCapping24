@@ -15,29 +15,8 @@ const UserProfile: React.FC = () => {
   const [serviceStatement, setServiceStatement] = useState('');
   const [committeeOptions, setCommitteeOptions] = useState<{ value: string, label: string }[]>([]);
   const [schoolOptions, setSchoolOptions] = useState<{ value: string, label: string }[]>([]);
-  const [email, setEmail] = useState(''); // New state to store user email
 
   useEffect(() => {
-    const fetchUserEmail = async () => {
-      try {
-        const response = await fetch('/current-user', { // New endpoint to get current user email
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setEmail(data.email);
-        } else {
-          throw new Error('Failed to fetch user email');
-        }
-      } catch (error) {
-        console.error('Error fetching user email:', error);
-      }
-    };
-
     const fetchCommitteeNames = async () => {
       try {
         const response = await fetch('/committees', {
@@ -82,7 +61,6 @@ const UserProfile: React.FC = () => {
       }
     };
 
-    fetchUserEmail(); // Fetch user email on component mount
     fetchCommitteeNames();
     fetchSchoolNames();
   }, []);
@@ -91,80 +69,9 @@ const UserProfile: React.FC = () => {
     setCommittees(selectedOptions ? selectedOptions.map((option: any) => option.value) : []);
   };
 
-  const handleSave = async () => {
-    try {
-      // Check if user exists
-      const checkResponse = await fetch(`/faculty-by-email?email=${encodeURIComponent(email)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!checkResponse.ok) {
-        throw new Error('Error checking user existence');
-      }
-
-      const facultyData = await checkResponse.json();
-      const userExists = facultyData.length > 0;
-
-      if (userExists) {
-        // Update user profile
-        const response = await fetch('/update-user-profile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            preferredName,
-            school,
-            committees,
-            serviceStatement,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.message);
-          setIsEditing(false);
-        } else {
-          alert(data.message);
-        }
-      } else {
-        // Create user profile
-        const response = await fetch('/create-user-profile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            preferredName,
-            school,
-            committees,
-            serviceStatement,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.message);
-          setIsEditing(false);
-        } else {
-          alert(data.message);
-        }
-      }
-    } catch (error) {
-      console.error('Error saving profile:', error);
-      alert('Failed to save profile. Please try again.');
-    }
+  const handleSave = () => {
+    setIsEditing(false);
+    // Trigger save to the database here
   };
 
   return (
@@ -240,7 +147,7 @@ const UserProfile: React.FC = () => {
           <div className="profile-view">
             <p><strong>Preferred Name:</strong> {preferredName || 'Not provided'}</p>
             <p><strong>School:</strong> {school || 'Not selected'}</p>
-            <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>
+            <p><strong>Committees:</strong> {committees.length > 0 ? committees.join(', ') : 'None selected'}</p>      
             <p><strong>Service Statement:</strong> {serviceStatement || 'Not provided'}</p>
             <button type="button" className="edit-button" onClick={() => setIsEditing(true)}>
               Edit Profile
