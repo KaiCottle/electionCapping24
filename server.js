@@ -61,13 +61,15 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
-    }
+    function (profile, done) {
+        // for signon
+        findByEmail(profile.email, function (err, user) {
+          if (err) {
+            return done(err);
+          }
+          return done(null, user);
+        });
+      },
 ));
 
 passport.serializeUser((user, done) => {
@@ -87,7 +89,7 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
-    res.redirect("/user-profile");
+    res.redirect("/user-profile",);
   }
 );
 
