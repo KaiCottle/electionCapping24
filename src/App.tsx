@@ -6,7 +6,7 @@ import AdminView from './AdminView'; // Admin view component
 import UserProfile from './UserProfile'; // User profile component 
 import { AuthProvider, useAuth } from './AuthContext'; // Adjust the path as necessary
 import { useNavigate } from 'react-router-dom';
-import Userlogin from './User-Login';
+import UserLogin from './User-Login';
 
 function App() {
   return (
