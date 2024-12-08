@@ -96,16 +96,6 @@ app.get('/sso/login',
     }
 );
 
-// Redirect base URL to /login
-app.get('/', (req, res) => {
-    res.redirect('/login');
-});
-
-// Define the /login route to serve the React app
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
     const { username, password } = req.body; // Capture username and password from request
