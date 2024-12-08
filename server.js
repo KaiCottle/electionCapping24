@@ -143,9 +143,9 @@ app.post('/check-email', async (req, res) => {
         LEFT JOIN 
           Schools s ON f.schoolid = s.sid
         LEFT JOIN 
-          FacultyCommittees fc ON f.fid = fc.fid
+          CommitteeAssignments ca ON f.fid = ca.fid
         LEFT JOIN 
-          Committees c ON fc.cid = c.cid
+          Committees c ON ca.cid = c.cid
         WHERE 
           f.email = $1
         GROUP BY 
@@ -170,7 +170,7 @@ app.post('/check-email', async (req, res) => {
       console.error('Error checking email:', error);
       res.status(500).json({ message: 'Server error.' });
     }
-});
+  });
 
 // Route to handle admin login
 app.post('/admin-login', async (req, res) => {
