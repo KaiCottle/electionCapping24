@@ -94,7 +94,7 @@ const UserProfile: React.FC = () => {
         setServiceStatement(data.serviceStatement);
         setError('');
       } else {
-        setError('Email not found. Click "Edit Profile" to create a new profile.');
+        setError('Email not found. Click "Edit Profile" to create a new profile 2.');
       }
     } catch (err) {
       console.error('Error checking email:', err);
