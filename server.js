@@ -61,14 +61,13 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    (profile, done) => {
-        // Extract user information from the profile
-        const user = {
-            email: profile.emailAddress,
-        };
-        return done(null, user);
-    }
-));
+    function (profile, done) {
+        return done(null, {
+          email: profile.emailAddress,
+        });
+      }
+    )
+  );
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -86,10 +85,13 @@ app.post(
     failureRedirect: "/",
     failureFlash: true,
   }),
-  function (req, res) {
-    res.redirect("/user-profile");
-  }
-);
+    function (req, res) {
+      // Access the authenticated user
+      console.log("req.user");
+      console.log(req.user);
+      res.redirect("/user-profile");
+    }
+  );
 
 // SSO login route
 app.get('/sso/login',
