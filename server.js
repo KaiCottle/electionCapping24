@@ -72,6 +72,7 @@ passport.use(new SamlStrategy(
             }
             return done(null, user);
             console.log('User found');
+            console.log(req.user);
             console.log(user);
         });
     },
