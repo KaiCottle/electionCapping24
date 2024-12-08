@@ -61,21 +61,13 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
-    function (req, profile, done) {
-        // for signon
-        findByEmail(profile.emailAddress, function (err, user) {
-            if (err) {
-                return done(err);
-            }
-            if (!user) {
-                return done(new Error('User not found'));
-            }
-            return done(null, user);
-            console.log('User found');
-            console.log(req.user);
-            console.log(user);
-        });
-    },
+    (profile, done) => {
+        // Extract user information from the profile
+        const user = {
+            email: profile.emailAddress,
+        };
+        return done(null, user);
+    }
 ));
 
 passport.serializeUser((user, done) => {
