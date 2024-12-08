@@ -85,31 +85,6 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// Correct route handler with both req and res
-app.get('/committees', async (req, res) => {
-    try {
-      const result = await client.query('SELECT Cname FROM Committees');
-      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
-      res.json(result.rows);
-    } catch (err) {
-      console.error('Error fetching committees:', err);
-      res.status(500).json({ message: 'Server error' });
-    }
-  }
-);
-
-// Route to fetch school names
-app.get('/schools', async (req, res) => {
-    try {
-        const result = await client.query('SELECT Sname FROM Schools');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error fetching schools:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-  }
-);
-
 // SSO callback route
 app.post(
   '/login/callback',
@@ -119,6 +94,7 @@ app.post(
     failureFlash: true,
   }),
   function (req, res) {
+    console.log("raw assertion XML:", profile.getAssertionXml());
     res.redirect("/user-profile");
   }
 );
@@ -140,6 +116,31 @@ app.get('/committees', async (req, res) => {
     } catch (err) {
       console.error('Error fetching committees:', err);
       res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// Correct route handler with both req and res
+app.get('/committees', async (req, res) => {
+    try {
+      const result = await client.query('SELECT Cname FROM Committees');
+      console.log('Fetched committees:', result.rows); // Add this line to log the fetched data
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Error fetching committees:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// Route to fetch school names
+app.get('/schools', async (req, res) => {
+    try {
+        const result = await client.query('SELECT Sname FROM Schools');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching schools:', err);
+        res.status(500).json({ message: 'Server error' });
     }
   }
 );
