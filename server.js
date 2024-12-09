@@ -92,7 +92,7 @@ app.post(
     failureFlash: true,
   }),
     function (req, res) {
-      // Return authenticated user in from of 'req.user'
+      // Return authenticated user in form of 'req.user'
       console.log("req.user");
       console.log(req.user);
       res.redirect("/user-profile");
