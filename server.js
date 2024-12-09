@@ -50,6 +50,11 @@ const hashPassword = (password) => {
 };
 
 // Passport SAML strategy configuration
+// decryptPvk: private key
+// privateCert: private cert
+// idpCert: signature from idp_metadata.xml
+// wantAssertionsSigned: must be false
+// wantAuthnResponseSigned: must be false
 passport.use(new SamlStrategy(
     {
       callbackUrl: 'https://facelect.capping.ecrl.marist.edu/login/callback',
@@ -61,6 +66,7 @@ passport.use(new SamlStrategy(
       wantAssertionsSigned: false,
       wantAuthnResponseSigned: false
     },
+    // function to return user email
     function (profile, done) {
         return done(null, {
           email: profile.email,
@@ -86,10 +92,10 @@ app.post(
     failureFlash: true,
   }),
     function (req, res) {
-      // Access the authenticated user
+      // Return authenticated user in from of 'req.user'
       console.log("req.user");
       console.log(req.user);
-      res.redirect("/user-profile"); // pass email here after quote , user.req.email
+      res.redirect("/user-profile");
     }
   );
 
