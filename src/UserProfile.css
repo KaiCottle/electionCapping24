@@ -89,6 +89,7 @@ select, /* Added select to match the styling */
     background-color: white;
 }
 
+
 .css-1pahdxg-control {
     border-color: #b21e2d !important;
     box-shadow: none !important;
@@ -114,13 +115,17 @@ select, /* Added select to match the styling */
 .save-button {
     background-color: #b21e2d;
     border: 2px solid #fe6978;
-    border-radius: 10px;
     cursor: pointer;
     display: flex;
     justify-content: flex-end;
     margin: auto;
     transition-duration: 0.4s;
     color: white;
+    padding: 10px;
+    font-size: large;
+    border-radius: 15px;
+    margin-top: 30px;
+    margin-bottom: -10px;
 }
 
 .save-button:hover {
@@ -227,6 +232,14 @@ select, /* Added select to match the styling */
     margin-top: 10px;
   }
 
+  .service-statement {
+  word-wrap: break-word; /* Break long words onto the next line */
+  word-break: break-word; /* Ensure any overly long word breaks */
+  white-space: pre-wrap; /* Keep line breaks and spacing while wrapping text */
+  max-width: 100%; /* Make sure it fits within the container */
+  }
+
+
   .editing-header {
     position: relative;
     margin-bottom: 20px; /* Adds space between the header and the form content */
@@ -249,6 +262,30 @@ select, /* Added select to match the styling */
 .go-back-button:hover {
     color: #831b25;
 }
+
+.go-back-button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
 
 .back-arrow {
     width: 18px;
