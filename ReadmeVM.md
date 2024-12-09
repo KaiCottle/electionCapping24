@@ -66,16 +66,16 @@ To run this platform, your environment must meet the following prerequisites:
 
 ## Setup Instructions
 
-- **CLone repo**: git clone https://github.com/KaiCottle/electionCapping24.git
+- **Clone repo**: git clone https://github.com/KaiCottle/electionCapping24.git
 
 - **Install Dependencies**: Install any required software dependencies using your package manager like npm install or pip install
 - **Configuration**: Set up necessary environment variables or configuration files for example the Marist SSO credentials.
-- **Starting the application**: Use command npm start to start the application
+- **Starting the application**: Use the command npm start to start the application
 
 ## Support
 
 - **If you encounter issues with the VM or SSO contact Marist IT and Services for help**: Email: HelpDesk@marist.edu, Phone: (845) 575-4357
-- For porject related issues, clone the repo using: git clone https://github.com/KaiCottle/electionCapping24.git
+- For project-related issues, clone the repo using: git clone https://github.com/KaiCottle/electionCapping24.git
 
 ## Contributing
 
