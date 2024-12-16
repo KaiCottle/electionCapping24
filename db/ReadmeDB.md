@@ -36,26 +36,21 @@ This guide ensures manual updates are executed safely and accurately.
 To access the database, you will need the following:
 
 1. **PostgreSQL client** installed on your system.
-2. **Database credentials** provided during project setup:
-   - **Host**: `localhost` or the server IP: `10.11.29.95`
-   - **Port**: `5432` (default for PostgreSQL)
-   - **Database Name**: `election_capping`
-   - **Username**: root@10.11.29.95
-   - **Password**: MaristDev2024!
+2. **Database credentials**  For userid/password access to any existing instance, contact the Joint Study IT students via Algozzine. For creating your own access, follow a simple password construct you won't forget, notify Algozzine of what that password is, and do NOT document it in your github repo documention
 
 ### Connect to the Database:
 
 Run the following command in your terminal:
 
 ```bash
-psql -h 10.11.29.95 -U <username> -d election_capping
+psql -h <ip_address> -U <username> -d election_capping
 ```
 
 ---
 
 ### Backup the Database
 
-- Before making any changes make sure you create a backup to avoid any accidental data loss: pg_dump -h 10.11.29.103 -U <username> -d election_capping -f backup.sql
+- Before making any changes make sure you create a backup to avoid any accidental data loss: pg_dump -h <ip_address> -U <username> -d election_capping -f backup.sql
 
 ### Update Process
 
